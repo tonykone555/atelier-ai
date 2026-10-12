@@ -78,3 +78,23 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 @media(prefers-reduced-motion:reduce){.hero-background-video{display:none!important}}
 
 .upload-media-label{background:#f8f8ff;border:1px dashed #b7b4e7;padding:13px;border-radius:12px;color:#5854a7}.upload-media-label input[type=file]{font-size:11px;cursor:pointer;background:white;padding:10px;border:0;border-radius:8px}.upload-media-label input[type=file]::file-selector-button{border:0;background:#e8e6ff;color:#514cb0;border-radius:7px;padding:8px;margin-right:9px;cursor:pointer}
+
+/* Interactive website defaults: reveal, smooth motion and carousel */
+.preview{scroll-behavior:smooth}
+.preview .site-section,.preview .menu-product{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1)}
+.preview .site-section.is-visible,.preview .menu-product.is-visible{opacity:1;transform:translateY(0)}
+.preview .site-section.selected{transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1),outline-color .2s ease}
+.preview button,.preview a,.preview .item-grid>div,.preview .menu-product{transition-property:opacity,transform,box-shadow,background-color,border-color;transition-duration:.2s}
+.preview button:hover,.preview a:hover{opacity:.8}
+.preview .item-grid>div:hover,.preview .menu-product:hover{transform:translateY(-5px);box-shadow:0 14px 32px #16132315}
+.atelier-slider{width:100%;margin:28px 0;min-width:0}
+.atelier-slide-track{display:flex;overflow-x:auto;gap:15px;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-inline:contain;border-radius:15px}
+.atelier-slide-track::-webkit-scrollbar{display:none}
+.atelier-slide{flex:0 0 clamp(220px,65%,550px);min-height:180px;display:flex;flex-direction:column;justify-content:space-between;background:#f4f4f6;border:1px solid #e9e9ed;border-radius:15px;padding:25px;scroll-snap-align:center;transition:transform .2s}
+.atelier-slide:hover{transform:translateY(-3px)}
+.atelier-slide strong{font-size:clamp(18px,2vw,29px);line-height:1.2;letter-spacing:-.03em}
+.slide-number{font-size:12px;color:var(--accent,#777)}
+.atelier-slide-controls{display:flex;justify-content:flex-end;align-items:center;gap:14px;padding:12px 0}
+.atelier-slide-controls button{height:35px;width:35px;border:1px solid #dadbe1;border-radius:50%;background:white;cursor:pointer}
+.atelier-slide-controls span{font-size:11px;color:#898a90}
+@media(prefers-reduced-motion:reduce){html,.preview{scroll-behavior:auto!important}.preview .site-section,.preview .menu-product{opacity:1!important;transform:none!important;transition:none!important}.preview .item-grid>div,.atelier-slide{transition:none!important}.atelier-slide-track{scroll-behavior:auto!important}}
