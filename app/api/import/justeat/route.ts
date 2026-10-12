@@ -34,7 +34,7 @@ export async function POST(request:Request){
     const items:Item[]=rows.slice(0,250).map((r:Record<string,unknown>,index:number)=>{
       const variations=Array.isArray(r.variations)?r.variations.slice(0,30).map((v:Record<string,unknown>)=>({name:clean(v.Name??v.name,80),price:number(v.BasePrice??v.price)})):[];
       return {id:clean(r.id,100)||String(index+1),name:clean(r.name,160),description:clean(r.description,800),
-        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||'GBP',variations,sourceUrl:menuUrl,imageUrl:imageUrl(r),imageStatus:imageUrl(r)?'available':'missing'};
+        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||'GBP',variations,sourceUrl:menuUrl,imageUrl:imageUrl(r),imageStatus:(imageUrl(r)?'available':'missing') as Item['imageStatus']};
     }).filter((r:Item)=>r.name);
     return NextResponse.json({source:'Just Eat via Apify',sourceUrl:menuUrl,restaurantName:clean(rows[0]?.restaurantName,150),
       items,imagesFound:items.filter(i=>i.imageStatus==='available').length,imagesMissing:items.filter(i=>i.imageStatus==='missing').length,groups:[...new Set(items.map(i=>i.category))],requiresReview:true,publishable:false,
