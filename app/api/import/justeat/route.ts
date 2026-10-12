@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server';
 
 export const runtime = 'nodejs';
-type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string};
+type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string;imageUrl:string|null;imageStatus:'available'|'missing'};
 function validUrl(value:unknown):string|null {
   try{const url=new URL(String(value));const h=url.hostname.toLowerCase();
     if(url.protocol!=='https:'||!(h==='just-eat.co.uk'||h==='www.just-eat.co.uk')||!url.pathname.endsWith('/menu'))return null;
@@ -9,6 +9,7 @@ function validUrl(value:unknown):string|null {
   }catch{return null}
 }
 function number(v:unknown):number|null{const n=Number(v);return Number.isFinite(n)&&n>=0?n:null}
+function imageUrl(row:Record<string,unknown>):string|null{for(const candidate of [row.imageUrl,row.imageURL,row.image,row.image_url,row.pictureUrl,row.photoUrl]){const value=typeof candidate==='string'?candidate:(candidate&&typeof candidate==='object'?(candidate as Record<string,unknown>).url:null);if(typeof value!=='string')continue;try{const u=new URL(value);if(u.protocol==='https:'&&u.username===''&&u.password==='')return u.toString()}catch{}}return null}
 function clean(v:unknown,max=400){return typeof v==='string'?v.trim().slice(0,max):''}
 export async function POST(request:Request){
   try{
@@ -33,10 +34,10 @@ export async function POST(request:Request){
     const items:Item[]=rows.slice(0,250).map((r:Record<string,unknown>,index:number)=>{
       const variations=Array.isArray(r.variations)?r.variations.slice(0,30).map((v:Record<string,unknown>)=>({name:clean(v.Name??v.name,80),price:number(v.BasePrice??v.price)})):[];
       return {id:clean(r.id,100)||String(index+1),name:clean(r.name,160),description:clean(r.description,800),
-        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||'GBP',variations,sourceUrl:menuUrl};
+        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||'GBP',variations,sourceUrl:menuUrl,imageUrl:imageUrl(r),imageStatus:imageUrl(r)?'available':'missing'};
     }).filter((r:Item)=>r.name);
     return NextResponse.json({source:'Just Eat via Apify',sourceUrl:menuUrl,restaurantName:clean(rows[0]?.restaurantName,150),
-      items,groups:[...new Set(items.map(i=>i.category))],requiresReview:true,publishable:false,
-      note:'Imported data is a draft only. Verify item details, prices and reuse rights before publication.'});
+      items,imagesFound:items.filter(i=>i.imageStatus==='available').length,imagesMissing:items.filter(i=>i.imageStatus==='missing').length,groups:[...new Set(items.map(i=>i.category))],requiresReview:true,publishable:false,
+      note:'Dish photos are only included when supplied by the Actor output. Its documented fields do not guarantee images. Supply owned/licensed photos for missing dishes; verify prices and reuse rights before publication.'});
   }catch(e){return NextResponse.json({error:e instanceof Error&&e.name==='AbortError'?'Import timed out':'Could not import the menu'},{status:500})}
 }
