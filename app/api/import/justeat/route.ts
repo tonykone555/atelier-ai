@@ -4,7 +4,7 @@ export const runtime = 'nodejs';
 type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string;imageUrl:string|null;imageStatus:'available'|'missing'};
 function validUrl(value:unknown):string|null {
   try{const url=new URL(String(value));const h=url.hostname.toLowerCase();
-    if(url.protocol!=='https:'||!(h==='just-eat.co.uk'||h==='www.just-eat.co.uk')||!url.pathname.endsWith('/menu'))return null;
+    const supported=['just-eat.co.uk','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];\n    if(url.protocol!=='https:'||!supported.some(domain=>h===domain||h==='www.'+domain)||!url.pathname.replace(/\\/$/,'').endsWith('/menu'))return null;
     return url.toString();
   }catch{return null}
 }
@@ -16,7 +16,7 @@ export async function POST(request:Request){
     const body=await request.json();
     if(body?.confirmRights!==true)return NextResponse.json({error:'Confirm you are authorized to import and reuse this restaurant menu.'},{status:403});
     const menuUrl=validUrl(body?.menuUrl);
-    if(!menuUrl)return NextResponse.json({error:'Enter a valid UK Just Eat restaurant /menu URL.'},{status:400});
+    if(!menuUrl)return NextResponse.json({error:'Enter a supported Just Eat/Menulog/SkipTheDishes restaurant URL ending in /menu.'},{status:400});
     const token=process.env.APIFY_TOKEN;
     if(!token)return NextResponse.json({error:'Set APIFY_TOKEN in the server environment.'},{status:503});
     const actor='bakos_bence~justeat-menus';
@@ -26,7 +26,7 @@ export async function POST(request:Request){
     try{
       response=await fetch('https://api.apify.com/v2/acts/'+actor+'/run-sync-get-dataset-items?clean=true&limit=250',
         {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},signal:controller.signal,
-        body:JSON.stringify({mode:'menuUrl',startUrls:[menuUrl],country:'uk',maxItems:250})});
+        body:JSON.stringify({mode:'menuUrl',startUrls:[menuUrl],maxItems:250})});
     }finally{clearTimeout(timeout)}
     if(!response.ok)return NextResponse.json({error:'Apify menu import failed',status:response.status},{status:502});
     const rows=await response.json();
