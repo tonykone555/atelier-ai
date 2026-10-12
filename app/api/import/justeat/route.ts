@@ -3,9 +3,20 @@ import {NextResponse} from 'next/server';
 export const runtime = 'nodejs';
 type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string;imageUrl:string|null;imageStatus:'available'|'missing'};
 function validUrl(value:unknown):string|null {
-  try{const url=new URL(String(value));const h=url.hostname.toLowerCase();
+  try{
+    const url=new URL(String(value).trim());
+    const h=url.hostname.toLowerCase();
     const supported=['just-eat.co.uk','just-eat.ch','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];
-    if(url.protocol!=='https:'||!supported.some(domain=>h===domain||h==='www.'+domain)||!url.pathname.replace(/\/$/,'').endsWith('/menu'))return null;
+    if(url.protocol!=='https:'||url.username||url.password||!supported.some(domain=>h===domain||h==='www.'+domain))return null;
+    const segments=url.pathname.split('/').filter(Boolean);
+    // Swiss Just Eat shares menus as /speisekarte/restaurant-slug or /fr/menu/restaurant-slug.
+    const menuSegment=segments.findIndex(p=>['menu','speisekarte','carte'].includes(p.toLowerCase()));
+    const oldStyle=/^restaurants-[a-z0-9-]+\/menu\/?$/i.test(url.pathname.slice(1));
+    if((menuSegment<0||menuSegment===segments.length-1)&&!oldStyle)return null;
+    if(h.endsWith('just-eat.ch')&&menuSegment>=0&&segments[menuSegment+1]){
+      // Canonicalize language variants to the Swiss /en/menu/slug URL.
+      url.pathname='/en/menu/'+segments.slice(menuSegment+1).join('/');
+    }
     return url.toString();
   }catch{return null}
 }
@@ -17,7 +28,7 @@ export async function POST(request:Request){
     const body=await request.json();
     if(body?.confirmRights!==true)return NextResponse.json({error:'Confirm you are authorized to import and reuse this restaurant menu.'},{status:403});
     const menuUrl=validUrl(body?.menuUrl);
-    if(!menuUrl)return NextResponse.json({error:'Enter a supported Just Eat/Menulog/SkipTheDishes restaurant URL ending in /menu.'},{status:400});
+    if(!menuUrl)return NextResponse.json({error:'Paste a Just Eat restaurant menu URL, including Swiss /speisekarte/ links.'},{status:400});
     const token=process.env.APIFY_TOKEN;
     if(!token)return NextResponse.json({error:'Set APIFY_TOKEN in the server environment.'},{status:503});
     const actor='bakos_bence~justeat-menus';
@@ -35,7 +46,7 @@ export async function POST(request:Request){
     const items:Item[]=rows.slice(0,250).map((r:Record<string,unknown>,index:number)=>{
       const variations=Array.isArray(r.variations)?r.variations.slice(0,30).map((v:Record<string,unknown>)=>({name:clean(v.Name??v.name,80),price:number(v.BasePrice??v.price)})):[];
       return {id:clean(r.id,100)||String(index+1),name:clean(r.name,160),description:clean(r.description,800),
-        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||'GBP',variations,sourceUrl:menuUrl,imageUrl:imageUrl(r),imageStatus:(imageUrl(r)?'available':'missing') as Item['imageStatus']};
+        category:clean(r.category,120)||'Menu',price:number(r.price),currency:clean(r.currency,8)||(new URL(menuUrl).hostname.endsWith('.ch')?'CHF':'GBP'),variations,sourceUrl:menuUrl,imageUrl:imageUrl(r),imageStatus:(imageUrl(r)?'available':'missing') as Item['imageStatus']};
     }).filter((r:Item)=>r.name);
     return NextResponse.json({source:'Just Eat via Apify',sourceUrl:menuUrl,restaurantName:clean(rows[0]?.restaurantName,150),
       items,imagesFound:items.filter(i=>i.imageStatus==='available').length,imagesMissing:items.filter(i=>i.imageStatus==='missing').length,groups:[...new Set(items.map(i=>i.category))],requiresReview:true,publishable:false,
