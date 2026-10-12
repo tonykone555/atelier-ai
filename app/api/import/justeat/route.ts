@@ -4,7 +4,7 @@ export const runtime = 'nodejs';
 type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string;imageUrl:string|null;imageStatus:'available'|'missing'};
 function validUrl(value:unknown):string|null {
   try{const url=new URL(String(value));const h=url.hostname.toLowerCase();
-    const supported=['just-eat.co.uk','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];
+    const supported=['just-eat.co.uk','just-eat.ch','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];
     if(url.protocol!=='https:'||!supported.some(domain=>h===domain||h==='www.'+domain)||!url.pathname.replace(/\/$/,'').endsWith('/menu'))return null;
     return url.toString();
   }catch{return null}
@@ -27,7 +27,7 @@ export async function POST(request:Request){
     try{
       response=await fetch('https://api.apify.com/v2/acts/'+actor+'/run-sync-get-dataset-items?clean=true&limit=250',
         {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},signal:controller.signal,
-        body:JSON.stringify({mode:'menuUrl',startUrls:[menuUrl],maxItems:250})});
+        body:JSON.stringify({mode:'menuUrl',startUrls:[menuUrl],country:new URL(menuUrl).hostname.endsWith('.ch')?'ch':undefined,maxItems:250})});
     }finally{clearTimeout(timeout)}
     if(!response.ok)return NextResponse.json({error:'Apify menu import failed',status:response.status},{status:502});
     const rows=await response.json();
