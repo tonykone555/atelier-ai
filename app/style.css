@@ -76,3 +76,5 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .hero-copy{position:relative;z-index:1}
 .video-help,.inspiration-tip{font-size:11px;color:#87909e;line-height:1.55}
 @media(prefers-reduced-motion:reduce){.hero-background-video{display:none!important}}
+
+.upload-media-label{background:#f8f8ff;border:1px dashed #b7b4e7;padding:13px;border-radius:12px;color:#5854a7}.upload-media-label input[type=file]{font-size:11px;cursor:pointer;background:white;padding:10px;border:0;border-radius:8px}.upload-media-label input[type=file]::file-selector-button{border:0;background:#e8e6ff;color:#514cb0;border-radius:7px;padding:8px;margin-right:9px;cursor:pointer}
