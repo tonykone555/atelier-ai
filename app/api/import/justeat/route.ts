@@ -4,7 +4,8 @@ export const runtime = 'nodejs';
 type Item={id:string;name:string;description:string;category:string;price:number|null;currency:string;variations:{name:string;price:number|null}[];sourceUrl:string;imageUrl:string|null;imageStatus:'available'|'missing'};
 function validUrl(value:unknown):string|null {
   try{const url=new URL(String(value));const h=url.hostname.toLowerCase();
-    const supported=['just-eat.co.uk','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];\n    if(url.protocol!=='https:'||!supported.some(domain=>h===domain||h==='www.'+domain)||!url.pathname.replace(/\\/$/,'').endsWith('/menu'))return null;
+    const supported=['just-eat.co.uk','just-eat.ie','just-eat.dk','just-eat.no','just-eat.be','menulog.com.au','menulog.co.nz','skipthedishes.com'];
+    if(url.protocol!=='https:'||!supported.some(domain=>h===domain||h==='www.'+domain)||!url.pathname.replace(/\/$/,'').endsWith('/menu'))return null;
     return url.toString();
   }catch{return null}
 }
