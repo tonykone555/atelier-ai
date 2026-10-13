@@ -1219,7 +1219,33 @@
     }
 
   </style>
-<link rel="stylesheet" href="snacks-dany-menu.css">
+<style>/* SNACK'S DANY menu and gallery, imported from the supplied ZIP */
+.menu-section{max-width:1180px;margin:0 auto;padding:72px 20px}
+.menu-heading{text-align:center;max-width:700px;margin:0 auto 38px}
+.menu-eyebrow{letter-spacing:.18em;font-size:.78rem;font-weight:700}
+.menu-heading h2{font-size:clamp(2rem,5vw,3.5rem);margin:.35rem 0}
+.menu-heading p{opacity:.72}
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.menu-card{padding:25px;border-radius:18px;background:rgba(0,0,0,.035);border:1px solid rgba(0,0,0,.09)}
+.menu-card h3{margin:0 0 14px;font-size:1.35rem}
+.menu-item{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid rgba(0,0,0,.1)}
+.menu-item:last-child{border-bottom:0}
+.menu-item div{min-width:0}
+.menu-item strong{display:block}
+.menu-item small{display:block;margin-top:4px;opacity:.62;font-style:italic}
+.menu-item b{white-space:nowrap}
+.food-gallery{width:100%;overflow:hidden;margin:20px 0}
+.food-gallery-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px}
+.food-gallery-track::-webkit-scrollbar{display:none}
+.food-gallery-slide{flex:0 0 min(78vw,520px);margin:0;scroll-snap-align:center}
+.food-gallery-slide img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px}
+.hero-food-image{width:100%;overflow:hidden}
+.hero-food-image img{display:block;width:100%;max-height:70vh;object-fit:cover}
+html,body{max-width:100%;overflow-x:hidden}
+@media(max-width:700px){.menu-section{padding:48px 16px}.menu-grid{grid-template-columns:1fr}.menu-card{padding:20px}.food-gallery-track{padding:0 12px}.food-gallery-slide{flex-basis:86vw}}
+.hero-food-image{width:100%;overflow:hidden}
+.hero-food-image img{display:block;width:100%;height:auto;max-height:78vh;object-fit:cover}
+@media(max-width:700px){.hero-food-image img{width:100%;height:auto;max-height:72vh;object-fit:cover}}</style>
 </head>
 <body>
 
@@ -1741,6 +1767,10 @@ function applyImportedRestaurant(message){
  document.title=name+' — Restaurant';
  const logo=document.querySelector('.logo-mark');safeText(logo,name.split(/\s+/).map(x=>x.charAt(0)).slice(0,2).join('').toUpperCase());
  const generic=document.querySelector('.hero-description h2');if(generic)safeText(generic,'Découvrez notre carte');
+ const statCards=document.querySelector('.hero-stat-cards');if(statCards)statCards.style.display='none';
+ const heroDesc=document.querySelector('.hero-description p');if(heroDesc)heroDesc.textContent='Menu du restaurant';
+ const heroAction=document.querySelector('.hero-description .btn-white');if(heroAction){heroAction.href='#menu';heroAction.textContent='Découvrir le menu'}
+ const gallery=document.querySelector('.food-gallery-track');if(gallery){gallery.innerHTML='';for(const dish of items.filter(x=>typeof x.imageUrl==='string'&&/^https:\/\//.test(x.imageUrl)).slice(0,12)){const figure=document.createElement('figure');figure.className='food-gallery-slide';const image=document.createElement('img');image.src=dish.imageUrl;image.alt=dish.name;image.loading='lazy';figure.appendChild(image);gallery.appendChild(figure)}if(!gallery.children.length)gallery.parentElement.style.display='none'}
  const originalMenu=document.querySelector('#menu .menu-grid');
  if(originalMenu){
   originalMenu.innerHTML='';
