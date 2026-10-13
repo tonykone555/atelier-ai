@@ -12,7 +12,7 @@ export async function POST(req:Request){
     const template:TemplateKey=templates.some(t=>t.id===data.template)?data.template:'atelier';
     const base=demoSite(name,niche,kind,template);
     const menu=Array.isArray(data.importedMenu)?data.importedMenu.slice(0,180).map((m:{name?:string;category?:string;description?:string;price?:number|null;currency?:string;imageUrl?:string|null})=>({name:String(m.name||'').slice(0,120),category:String(m.category||'').slice(0,90),description:String(m.description||'').slice(0,280),price:typeof m.price==='number'?m.price:null,currency:String(m.currency||'CHF'),hasPhoto:!!m.imageUrl})):[];
-    const menuCategories=[...new Set(menu.map(m=>m.category))];
+    const menuCategories=[...new Set(menu.map((m:{category:string})=>m.category))];
     const brief=JSON.stringify({importedMenuSummary:menu.length?{totalDishes:menu.length,categories:menuCategories,items:menu.slice(0,80)}:null,brief:String(data.brief||'').slice(0,3000),name,niche,kind,baseline:base,research:(Array.isArray(data.research)?data.research:[]).slice(0,8).map((r:{title:string;summary:string;url:string})=>({title:String(r.title||'').slice(0,200),summary:String(r.summary||'').slice(0,600),url:String(r.url||'').slice(0,400)}))});
     let output:string;
     let provider:'gemini'|'openai';
