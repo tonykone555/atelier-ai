@@ -98,3 +98,15 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .atelier-slide-controls button{height:35px;width:35px;border:1px solid #dadbe1;border-radius:50%;background:white;cursor:pointer}
 .atelier-slide-controls span{font-size:11px;color:#898a90}
 @media(prefers-reduced-motion:reduce){html,.preview{scroll-behavior:auto!important}.preview .site-section,.preview .menu-product{opacity:1!important;transform:none!important;transition:none!important}.preview .item-grid>div,.atelier-slide{transition:none!important}.atelier-slide-track{scroll-behavior:auto!important}}
+
+/* Reusable bookmarked restaurant menus */
+.saved-menu-library{margin-top:18px;padding:15px;border:1px solid #e8e7f0;border-radius:14px;background:#fafafe;display:flex;flex-direction:column;gap:7px}
+.saved-menu-library>strong{font-size:13px;color:#313142}
+.saved-menu-library>small{font-size:11px;color:#858599;line-height:1.5}
+.saved-menu-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:8px;margin-top:6px;max-height:280px;overflow:auto}
+.saved-menu-entry{display:flex;align-items:stretch;min-width:0;background:white;border:1px solid #e6e5ec;border-radius:10px;overflow:hidden}
+.saved-menu-entry button{border:0;background:transparent;cursor:pointer;color:#333;text-align:left;min-width:0}
+.saved-menu-entry button:first-child{flex:1;padding:11px;display:flex;flex-direction:column;gap:5px}
+.saved-menu-entry b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.saved-menu-entry span{font-size:10px;color:#999}
+.saved-menu-entry .saved-menu-remove{font-size:20px;padding:0 12px;color:#aaa;border-left:1px solid #eee}
