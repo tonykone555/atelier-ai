@@ -110,3 +110,28 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .saved-menu-entry b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .saved-menu-entry span{font-size:10px;color:#999}
 .saved-menu-entry .saved-menu-remove{font-size:20px;padding:0 12px;color:#aaa;border-left:1px solid #eee}
+
+/* Restaurant-first interactive design system */
+.restaurant-style-switch{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.restaurant-style-switch button{border:1px solid #ddd7cd;border-radius:20px;padding:8px 11px;font-size:11px}
+.restaurant-style-switch button.active{background:#29251f;color:#fff}
+.menu-category-tabs{display:flex;gap:8px;margin:25px 0 18px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+.menu-category-tabs button{flex-shrink:0;border:1px solid #d9d6d0;border-radius:30px;padding:9px 15px;font-size:12px;background:transparent}
+.menu-category-tabs button.active{background:var(--accent,#af9475);color:white;border-color:transparent}
+.restaurant-theme-trattoria{background:#fff8ef;color:#352b25}
+.restaurant-theme-trattoria .site-nav,.restaurant-theme-trattoria .menu-section{background:#fff8ef}
+.restaurant-theme-trattoria .menu-product{background:#fffcf7;border-color:#e9dcd0;border-radius:22px}
+.restaurant-theme-trattoria .site-hero h1,.restaurant-theme-trattoria .menu-section h2{font-family:'Playfair Display',serif}
+.restaurant-theme-sora{background:#181917;color:#efe8dc}
+.restaurant-theme-sora .site-nav,.restaurant-theme-sora .menu-section,.restaurant-theme-sora .site-footer{background:#181917;color:#efe8dc}
+.restaurant-theme-sora .menu-product{background:#262823;color:#f8f0df;border-color:#474840;border-radius:3px}
+.restaurant-theme-sora .menu-section h2,.restaurant-theme-sora .site-hero h1{font-family:'Playfair Display',serif;letter-spacing:-.045em}
+.restaurant-theme-sora .menu-category-tabs button{color:#f0e6d2;border-color:#766d59}
+.restaurant-theme-ember{background:#f8efe5;color:#2e211d}
+.restaurant-theme-ember .site-nav,.restaurant-theme-ember .menu-section{background:#f8efe5}
+.restaurant-theme-ember .site-hero h1{text-transform:uppercase;font-weight:900;letter-spacing:-.08em}
+.restaurant-theme-ember .menu-section h2{text-transform:uppercase;font-weight:850;letter-spacing:-.06em}
+.restaurant-theme-ember .menu-product{background:#fff;border:2px solid #282320;border-radius:3px}
+.restaurant-theme-artisan .menu-product{border-radius:16px}
+.restaurant-theme-trattoria .menu-product img,.restaurant-theme-sora .menu-product img,.restaurant-theme-ember .menu-product img{transition:transform .45s ease}
+.restaurant-theme-trattoria .menu-product:hover img,.restaurant-theme-sora .menu-product:hover img,.restaurant-theme-ember .menu-product:hover img{transform:scale(1.04)}
