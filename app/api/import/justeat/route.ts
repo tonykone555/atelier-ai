@@ -10,13 +10,8 @@ function validUrl(value:unknown):string|null {
     if(url.protocol!=='https:'||url.username||url.password||!supported.some(domain=>h===domain||h==='www.'+domain))return null;
     const segments=url.pathname.split('/').filter(Boolean);
     // Swiss Just Eat shares menus as /speisekarte/restaurant-slug or /fr/menu/restaurant-slug.
-    const menuSegment=segments.findIndex(p=>['menu','speisekarte','carte','menue','carta'].includes(p.toLowerCase()));
-    const oldStyle=/^restaurants-[a-z0-9-]+\/menu\/?$/i.test(url.pathname.slice(1));
-    if(segments.length===0||((menuSegment<0||menuSegment===segments.length-1)&&!oldStyle))return null;
-    if(h.endsWith('just-eat.ch')&&menuSegment>=0&&segments[menuSegment+1]){
-      // Canonicalize language variants to the Swiss /en/menu/slug URL.
-      url.pathname='/en/menu/'+segments.slice(menuSegment+1).join('/');
-    }
+    // Accept restaurant URLs as pasted; different markets use different URL formats.
+    if(segments.length===0)return null;
     return url.toString();
   }catch{return null}
 }
@@ -34,7 +29,7 @@ export async function POST(request:Request){
     // URL-first import: crawl the specific menu page regardless of country.
     // Do not route Swiss or other markets through the UK-only menu Actor.
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),75000);
+    const timeout=setTimeout(()=>controller.abort(),53000);
     let rows:Record<string,unknown>[]=[];
     let restaurantName='';
     try{
