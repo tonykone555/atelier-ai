@@ -152,3 +152,45 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .saved-website-cover span{font-size:11px;font-weight:700}
 .saved-website-delete{padding:7px 12px;color:#928a82;font-size:11px;border-top:1px solid #f2eee9;width:100%;justify-content:flex-start}
 @media(max-width:650px){.saved-website-library{margin:0 0 35px;padding:15px}.saved-website-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.saved-website-heading h2{font-size:26px}.saved-website-heading p{font-size:11px}.saved-website-new{padding:10px 12px}.saved-website-cover{height:110px}.header-actions{gap:8px}.header-actions button{padding:8px 9px;font-size:10px}.beta{display:none}}
+
+/* SNACKS DANY-inspired dark restaurant menu: content always driven by imported products */
+.dany-inspired-preview{background:#11110f;color:#f5efe3}
+.dany-inspired-preview .site-nav,.dany-inspired-preview .site-footer{background:#151411;color:#f5efe3;border-color:#37312a}
+.dany-inspired-preview .site-section:not(.hero){background:#151411;color:#f5efe3}
+.dany-inspired-preview .site-section h2,.dany-inspired-preview .site-hero h1{font-family:'Playfair Display',Georgia,serif}
+.dany-inspired-preview .site-section .eyebrow{color:#d3a977}
+.dany-dark-menu{background:#121210;color:#f9f4e9;padding:65px clamp(20px,5%,70px) 82px;overflow:hidden}
+.dany-menu-head{text-align:center;max-width:760px;margin:0 auto 42px}
+.dany-menu-head .eyebrow{color:#c9a87b}
+.dany-menu-head h2{font:400 clamp(36px,5.7vw,76px)/1.1 'Playfair Display',serif;letter-spacing:-.04em;margin:14px 0}
+.dany-menu-head p{font-size:13px;line-height:1.7;color:#aca69e}
+.dany-featured-rail,.dany-category-rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.dany-featured-rail::-webkit-scrollbar,.dany-category-rail::-webkit-scrollbar{display:none}
+.dany-featured-card{flex:0 0 clamp(245px,60%,580px);height:clamp(260px,32vw,400px);position:relative;border-radius:12px;overflow:hidden;scroll-snap-align:start;background:#2d2923}
+.dany-featured-card::after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#080706df);pointer-events:none}
+.dany-featured-card img{height:100%;width:100%;object-fit:cover}
+.dany-featured-caption{position:absolute;bottom:22px;left:24px;right:24px;z-index:1;display:flex;flex-direction:column;gap:6px}
+.dany-featured-caption small{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#dfc49e}
+.dany-featured-caption strong{font:400 clamp(25px,3vw,39px)/1.1 'Playfair Display',serif}
+.dany-featured-caption span{font-size:13px;color:#ead5b3}
+.dany-dark-menu .menu-category-tabs{margin:45px 0 34px}
+.dany-dark-menu .menu-category-tabs button{color:#e7ded1;border:1px solid #524b41;white-space:nowrap}
+.dany-dark-menu .menu-category-tabs button.active{background:#c5a17a;color:#12110e}
+.dany-category-section{margin:40px 0 58px;scroll-margin-top:20px}
+.dany-category-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:0 0 22px}
+.dany-category-head .eyebrow{color:#bfa27b}
+.dany-category-head h3{font:400 clamp(28px,3.9vw,51px)/1.1 'Playfair Display',serif;margin:10px 0 0}
+.dany-category-head>span{font-size:11px;color:#ada397;text-align:right}
+.dany-category-rail{padding-bottom:5px}
+.dany-dish{flex:0 0 clamp(220px,27%,315px);background:#1e1d19;border:1px solid #38332b;border-radius:11px;overflow:hidden;scroll-snap-align:start;min-width:0}
+.dany-dish>img,.dany-missing-photo{width:100%;height:190px;display:flex;align-items:center;justify-content:center;object-fit:cover;background:#302b24;color:#a0988c;font-size:10px;letter-spacing:.12em}
+.dany-dish-body{padding:19px;display:flex;flex-direction:column;gap:9px;min-height:143px}
+.dany-dish-body small{color:#c9a87b;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.dany-dish-body h4{font:400 22px/1.15 'Playfair Display',serif;margin:0}
+.dany-dish-body p{font-size:12px;line-height:1.55;color:#b5aea4;margin:0}
+.dany-dish-body b{font-size:14px;color:#e4c59d;margin-top:auto}
+.dany-order-band{background:#242019;border:1px solid #554737;border-radius:12px;padding:clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.dany-order-band h3{font:400 clamp(30px,4vw,50px)/1.1 'Playfair Display',serif;margin:12px 0}
+.dany-order-band p{color:#bdb4a7;font-size:13px;line-height:1.6;margin:0;max-width:450px}
+.dany-order-band>a{background:#c5a17a;color:#17130e;padding:16px 24px;border-radius:35px;font-size:12px;font-weight:700;white-space:nowrap}
+@media(max-width:680px){.dany-dark-menu{padding:45px 18px 65px}.dany-featured-card{flex-basis:84%;height:300px}.dany-dish{flex-basis:72%}.dany-category-head{align-items:flex-start;flex-direction:column;gap:8px}.dany-category-head>span{text-align:left}.dany-order-band{align-items:stretch;flex-direction:column}.dany-order-band>a{text-align:center}.dany-featured-rail,.dany-category-rail{gap:12px}}
