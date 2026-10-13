@@ -11,9 +11,38 @@ function transform(rows:Record<string,unknown>[],url:string){const swiss=new URL
 function decode(s:string){return s.replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&quot;/gi,'"').replace(/&apos;|&#39;/gi,"'").replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n)))}
 function strip(s:string){return decode(s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ')).trim()}
 function piece(s:string,start:string,end:string){const i=s.indexOf(start);if(i<0)return '';const from=i+start.length;const j=s.indexOf(end,from);return j<0?s.slice(from):s.slice(from,j)}
-function cardPhoto(card:string){const tags=card.match(/<img\b[^>]*>/gi)||[];for(const tag of tags){for(const attr of ['src','data-src','data-original','data-lazy-src','srcset','data-srcset']){const pattern=new RegExp('(?:^|\\s)'+attr+'=["]([^"]+)["]','i');const match=tag.match(pattern);if(!match)continue;const value=decode(match[1]);const candidates=attr.includes('srcset')?value.split(',').map(x=>x.trim().split(/\s+/)[0]):[value];for(const candidate of candidates){if(/^https:\/\//i.test(candidate)&&!/(placeholder|blank\.|data:image)/i.test(candidate))return candidate}}}return null}
-function parsePrice(raw:string){const text=strip(raw).replace(/[’']/g,'').replace(/\u00a0/g,' ');const m=text.match(/(?:CHF|Fr\.?|SFr\.?|€|£)\s*(\d{1,5}(?:[.,]\d{1,2})?)|(\d{1,5}(?:[.,]\d{1,2})?)\s*(?:CHF|Fr\.?|SFr\.?|€|£)/i);const amount=m?.[1]||m?.[2];return amount?Number(amount.replace(',','.')):null}
-function cardPrice(card:string){const marker=card.search(/data-qa=["']item-price["']/i);if(marker>=0){const section=card.slice(marker,marker+500);const direct=parsePrice(section);if(direct!==null)return direct}const priceClass=card.search(/(?:item-price|price-style|itemPrice|basePrice)/i);if(priceClass>=0)return parsePrice(card.slice(priceClass,priceClass+500));return null}
+function cardPhoto(card:string){
+ const tags=card.match(/<img\b[^>]*>/gi)||[];
+ const read=(tag:string,attr:string)=>{const m=tag.match(new RegExp('(?:^|\\s)'+attr+'\\s*=\\s*(?:"([^"]+)"|\'([^\']+)\'|([^\\s>]+))','i'));return m?(m[1]||m[2]||m[3]):''};
+ const candidates:string[]=[];
+ for(const tag of tags){
+  for(const attr of ['data-srcset','srcset','data-original','data-lazy-src','data-src','src','data-image-url']){
+   const value=decode(read(tag,attr));
+   if(!value)continue;
+   if(attr.includes('srcset'))for(const part of value.split(','))candidates.push(part.trim().split(/\s+/)[0]);
+   else candidates.push(value);
+  }
+ }
+ for(const value of candidates){
+  if(!/^https:\/\//i.test(value)||/(placeholder|blank\.|data:image|spacer|pixel)/i.test(value))continue;
+  return value.replace(/&amp;/g,'&');
+ }
+ return null;
+}
+function parsePrice(raw:string){
+ const text=strip(raw).replace(/[’']/g,'').replace(/\u00a0/g,' ');
+ const match=text.match(/(?:CHF|SFr\.?|Fr\.?|EUR|GBP|€|£)\s*(\d{1,5}(?:[.,]\d{1,2})?)|(\d{1,5}(?:[.,]\d{1,2})?)\s*(?:CHF|SFr\.?|Fr\.?|EUR|GBP|€|£)/i);
+ const amount=match?.[1]||match?.[2];
+ return amount?Number(amount.replace(',','.')):null;
+}
+function cardPrice(card:string){
+ const marker=card.search(/data-qa=["']item-price["']/i);
+ if(marker>=0){const snippet=card.slice(marker,marker+800);const value=parsePrice(snippet);if(value!==null)return value}
+ for(const term of ['item-price','price-style','itemPrice','basePrice','"price"','"amount"']){
+  const i=card.indexOf(term);if(i>=0){const value=parsePrice(card.slice(i,i+600));if(value!==null)return value}
+ }
+ return null;
+}
 function extractMenu(html:string,url:string){
  const items:ReturnType<typeof transform>=[],seen=new Set<string>();
  const categoryBlocks=html.split(/<section\b[^>]*data-qa="item-category"[^>]*>/i);
@@ -25,13 +54,11 @@ function extractMenu(html:string,url:string){
    const name=strip(piece(card,'data-qa="item-name">','</span>'));
    if(!name||seen.has(id))continue;
    seen.add(id);
-   const priceText=strip(piece(card,'data-qa="item-price">','</div>'));
-   const found=priceText.match(/(\d{1,5}(?:[.,]\d{2})?)\s*(?:CHF|€|£)/i);
-   const price=found?Number(found[1].replace(',','.')):null;
+   const priceText=piece(card,'data-qa="item-price">','</div>');
+   const price=parsePrice(priceText)??cardPrice(card);
    const descStart=card.indexOf('formatted-description-style_description');
    const descPart=descStart<0?'':piece(card.slice(descStart),'aria-hidden="true">','</span>');
-   const img=card.match(/<img\b[^>]*\bsrc="(https:[^"]+)"[^>]*>/i);
-   const imageUrl=img?decode(img[1]):null;
+   const imageUrl=cardPhoto(card);
    items.push({id,name:name.slice(0,160),description:strip(descPart).slice(0,800),category:heading.slice(0,120),price,currency:new URL(url).hostname.endsWith('.ch')?'CHF':'GBP',variations:[],sourceUrl:url,imageUrl,imageStatus:imageUrl?'available':'missing'});
   }
  }
