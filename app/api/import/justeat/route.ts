@@ -22,7 +22,6 @@ function extractMenu(html:string,url:string){
    const name=strip(piece(card,'data-qa="item-name">','</span>'));
    if(!name||seen.has(id))continue;
    seen.add(id);
-   const description=strip(piece(card,'data-qa="item-price">','</div>'));// price marker separate
    const priceText=strip(piece(card,'data-qa="item-price">','</div>'));
    const found=priceText.match(/(\\d{1,5}(?:[.,]\\d{2})?)\\s*(?:CHF|€|£)/i);
    const price=found?Number(found[1].replace(',','.')):null;
