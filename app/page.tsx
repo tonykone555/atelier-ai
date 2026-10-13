@@ -79,7 +79,7 @@ function buildEditableDraft(){
   else if(categories.length&&i===0)sectionList.push({id:'features-'+i,type:'features',heading:'Our specialties',body:'Explore our menu categories.',items:categories.slice(0,9)});
   if(copy.length>2)sectionList.push({id:'about-'+i,type:'about',heading:copy[2].slice(0,180),body:copy.slice(3,6).join(' ').slice(0,800)||'More details coming soon.'});
   if(isContact)sectionList.push({id:'contact-'+i,type:'contact',heading:'Contact and reservations',body:'Please contact the restaurant to confirm opening hours, table availability and booking options.'});
-  return {slug:p.path==='/'?'home':p.path.replace(/^\\/+/,'').replace(/\\//g,'-').slice(0,90)||'page-'+i,name:p.name,sections:sectionList};
+  return {slug:p.path==='/'?'home':p.path.split('/').filter(Boolean).join('-').slice(0,90)||'page-'+i,name:p.name,sections:sectionList};
  });
  const next:Site={...site,template:'sora',pages:sections};
  setUndoStack(h=>[...h.slice(-19),site]);setRedoStack([]);
