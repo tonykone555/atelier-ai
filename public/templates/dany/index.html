@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNACK’S DANY PARIS — Une symphonie culinaire guidée par la passion et les produits de saison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       SYSTEM VARIABLES & BASE STYLES
+       ========================================================================== */
+    :root {
+      --bg-light: #ffffff;
+      --bg-dark: #272727;
+      --card-cream: #fbfbfa;
+      --text-main: #1c1c1c;
+      --text-muted: #8e8e8e;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      overflow-x: hidden;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
+
+    /* ==========================================================================
+       SCROLL ANIMATIONS (INTERSECTION OBSERVER)
+       ========================================================================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in-delay-1 { transition-delay: 0.15s; }
+    .fade-in-delay-2 { transition-delay: 0.3s; }
+    .fade-in-delay-3 { transition-delay: 0.45s; }
+
+    /* ==========================================================================
+       1. HERO SECTION
+       ========================================================================== */
+    .hero-section {
+      position: relative;
+      height: 92vh;
+      min-height: 680px;
+      margin: 20px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 40px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      z-index: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .nav-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-mark {
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: -1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    .btn-outline {
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: var(--transition-smooth);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
+      background: #fff;
+      color: var(--text-main);
+    }
+
+    .hero-giant-title {
+      position: absolute;
+      top: 18%;
+      left: 40px;
+      right: 40px;
+      z-index: 2;
+      font-size: clamp(60px, 12vw, 180px);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .hero-giant-title span {
+      display: block;
+      text-align: right;
+      font-size: 0.45em;
+      letter-spacing: -0.02em;
+      margin-top: -10px;
+    }
+
+    .hero-bottom-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .hero-description {
+      max-width: 420px;
+    }
+
+    .hero-description h2 {
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-description p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--text-main);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      background: #f0f0f0;
+    }
+
+    .hero-stat-cards {
+      display: flex;
+      gap: 16px;
+    }
+
+    .stat-card-small {
+      background: var(--card-cream);
+      color: var(--text-main);
+      border-radius: 20px;
+      padding: 16px 20px;
+      min-width: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-card-small h3 { font-size: 24px; font-weight: 700; }
+    .stat-card-small p { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+
+    .stat-card-large {
+      background: var(--card-cream);
+      color: var(--text-main);
+      border-radius: 24px;
+      padding: 12px;
+      width: 220px;
+    }
+
+    .stat-card-large img {
+      width: 100%;
+      height: 110px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-large .num { font-size: 26px; font-weight: 700; text-align: center; }
+    .stat-card-large .sub { font-size: 10px; color: var(--text-muted); text-align: center; line-height: 1.2; margin-top: 4px; }
+
+    /* ==========================================================================
+       2. ABOUT SECTION
+       ========================================================================== */
+    .section-padding { padding: 100px 0; }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 40px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .about-lead-text {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--text-muted);
+      margin-bottom: 60px;
+      text-transform: uppercase;
+    }
+
+    .about-lead-text span { color: var(--text-main); }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .stat-item h3 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+    .stat-item p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ==========================================================================
+       3. DESIGN PROCESS SECTION
+       ========================================================================== */
+    .process-section {
+      position: relative;
+      min-height: 600px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin: 40px 20px;
+      padding: 60px 40px;
+      background: #efefec;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .process-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .process-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(2px);
+      z-index: 2;
+    }
+
+    .process-header {
+      position: relative;
+      z-index: 5;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .process-grid {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 80px;
+    }
+
+    .process-card {
+      background: #fafaf7;
+      border-radius: var(--radius-lg);
+      padding: 30px 24px;
+      height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .process-card.offset { transform: translateY(-30px); }
+
+    .card-num { font-size: 20px; font-weight: 600; }
+    .card-title { font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+    .card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; text-transform: lowercase; }
+
+    /* ==========================================================================
+       4. CATALOG SLIDER SECTION
+       ========================================================================== */
+    .catalog-card {
+      border-top: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 50px 0;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .catalog-img-container {
+      width: 100%;
+      height: 420px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .catalog-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease;
+    }
+
+    .catalog-info h2 {
+      font-size: 48px;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .catalog-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+      list-style: none;
+      margin-bottom: 40px;
+    }
+
+    .features-list li {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .btn-dark {
+      background: var(--bg-dark);
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s ease;
+    }
+
+    .btn-dark:hover {
+      background: #000;
+    }
+
+    /* Slider Dots */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 30px;
+    }
+
+    .dot {
+      width: 32px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .dot.active { background: var(--bg-dark); }
+
+    /* ==========================================================================
+       5. AUTOMATIC CONTINUOUS IMAGE CAROUSEL
+       ========================================================================== */
+    .horizontal-slider-section {
+      padding: 60px 0;
+      overflow: hidden;
+    }
+
+    .slider-heading {
+      font-size: clamp(18px, 2vw, 24px);
+      text-transform: uppercase;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin-left: 280px;
+      margin-bottom: 40px;
+      line-height: 1.3;
+    }
+
+    .slider-heading span { color: var(--text-main); }
+
+    .track-wrapper {
+      display: flex;
+      gap: 24px;
+      width: max-content;
+      animation: infiniteScroll 25s linear infinite;
+    }
+
+    .track-wrapper:hover { animation-play-state: paused; }
+
+    @keyframes infiniteScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .gallery-card {
+      width: 440px;
+      flex-shrink: 0;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 280px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+
+    .gallery-card caption {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    /* ==========================================================================
+       6. REVIEWS / TESTIMONIALS SLIDER
+       ========================================================================== */
+    .testimonial-card {
+      background: #333333;
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      width: 360px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 220px;
+    }
+
+    .testimonial-card p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #d1d1d1;
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .author-name { font-size: 13px; font-weight: 600; }
+
+    /* ==========================================================================
+       7. CONTACT FORM SECTION
+       ========================================================================== */
+    .contact-card {
+      background: var(--bg-dark);
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 80px 60px 40px;
+      margin: 40px 20px;
+      position: relative;
+    }
+
+    .contact-title {
+      font-size: clamp(50px, 8vw, 110px);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: flex-start;
+    }
+
+    .input-group {
+      margin-bottom: 30px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding: 12px 0;
+      color: #fff;
+      font-family: var(--font-main);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .input-field:focus { border-bottom-color: #fff; }
+
+    .contact-text-right {
+      font-size: 13px;
+      color: #aaaaaa;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    .contact-text-right span { color: #fff; }
+
+    .office-preview-img {
+      width: 100%;
+      height: 120px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-top: 30px;
+    }
+
+    .footer-bar {
+      margin-top: 80px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .footer-links a {
+      color: #777;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+
+    /* ==========================================================================
+       ACCESSIBLE IMAGE FALLBACKS + HERO SEPARATION
+       ========================================================================== */
+    .hero-image-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.08) 42%, rgba(0,0,0,0.58) 100%);
+      pointer-events: none;
+    }
+
+    .hero-title-panel {
+      position: relative;
+      z-index: 6;
+      align-self: flex-start;
+      width: min(760px, 70%);
+      margin-top: 12vh;
+      padding: 24px 30px 28px;
+      border-radius: 22px;
+      background: rgba(17,17,17,0.88);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.24);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-giant-title {
+      position: static;
+      font-size: clamp(56px, 9vw, 150px);
+      font-weight: 300;
+      letter-spacing: -0.045em;
+      line-height: 0.82;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .hero-giant-title span {
+      display: block;
+      text-align: right;
+      font-size: 0.42em;
+      letter-spacing: -0.02em;
+      margin-top: 8px;
+    }
+
+    .image-unavailable {
+      display: none !important;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        padding: 0 20px;
+      }
+
+      .hero-section {
+        height: auto;
+        min-height: 0;
+        margin: 10px;
+        padding: 16px;
+        border-radius: 22px;
+        gap: 28px;
+      }
+
+      .hero-bg {
+        min-height: 520px;
+      }
+
+      .hero-title-panel {
+        width: 100%;
+        margin-top: 72px;
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .hero-giant-title {
+        font-size: clamp(42px, 13vw, 82px);
+      }
+
+      .hero-bottom-content {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+      }
+
+      .hero-description {
+        max-width: none;
+      }
+
+      .hero-description h2 {
+        font-size: clamp(22px, 6vw, 30px);
+      }
+
+      .hero-stat-cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .stat-card-small,
+      .stat-card-large {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .stat-card-large img {
+        height: 160px;
+      }
+
+      .section-padding {
+        padding: 64px 0;
+      }
+
+      .process-section {
+        min-height: 0;
+        margin: 24px 10px;
+        padding: 32px 20px;
+      }
+
+      .process-bg-img {
+        min-height: 100%;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .process-card {
+        height: auto;
+        min-height: 220px;
+      }
+
+      .catalog-card {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 32px 0;
+      }
+
+      .catalog-img-container {
+        height: 240px;
+      }
+
+      .catalog-info h2 {
+        font-size: clamp(32px, 9vw, 48px);
+      }
+
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+
+      .horizontal-slider-section {
+        padding: 40px 0;
+      }
+
+      .slider-heading {
+        margin: 0 20px 24px;
+      }
+
+      .gallery-card {
+        width: min(78vw, 340px);
+      }
+
+      .gallery-card img {
+        height: 220px;
+      }
+
+      .testimonial-card {
+        width: min(78vw, 340px);
+        height: 230px;
+      }
+
+      .contact-card {
+        padding: 48px 20px 24px;
+        margin: 20px 10px;
+        border-radius: 22px;
+      }
+
+      .contact-title {
+        font-size: clamp(42px, 13vw, 76px);
+        margin-bottom: 40px;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .footer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 48px;
+      }
+
+      .footer-links a {
+        margin-left: 0;
+        margin-right: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding: 12px;
+      }
+
+      .hero-title-panel {
+        margin-top: 52px;
+        padding: 16px;
+      }
+
+      .hero-description p {
+        font-size: 12px;
+      }
+
+      .btn-white,
+      .btn-outline,
+      .btn-dark {
+        width: 100%;
+        text-align: center;
+        padding: 14px 18px;
+      }
+
+      .nav-bar .btn-outline {
+        width: auto;
+        max-width: 210px;
+      }
+
+      .logo-mark {
+        font-size: 21px;
+      }
+
+      .process-card {
+        min-height: 190px;
+        padding: 24px 20px;
+      }
+
+      .catalog-img-container {
+        height: 200px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    @media (max-width: 900px) {
+      .hero-section { height: auto; min-height: 560px; padding: 20px; }
+      .hero-bottom-content { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .hero-stat-cards { width: 100%; flex-wrap: wrap; }
+      .stat-card-large { width: 100%; }
+      .section-grid { grid-template-columns: 1fr; gap: 20px; }
+      .stats-row { grid-template-columns: 1fr; gap: 24px; }
+      .process-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 30px; }
+      .process-card.offset { transform: none; }
+      .catalog-card { grid-template-columns: 1fr; gap: 30px; }
+      .catalog-img-container { height: 260px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+      .slider-heading { margin-left: 0; }
+      .hero-giant-title { font-size: clamp(42px, 13vw, 82px); }
+      .nav-links { display: none; }
+      .contact-card { padding: 40px 24px 24px; margin: 20px 10px; }
+    }
+  
+    /* FINAL MOBILE + RESERVATION FIXES */
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
+
+    .hero-section {
+      max-width: calc(100vw - 40px);
+    }
+
+    .hero-bg {
+      object-position: center center;
+    }
+
+    .horizontal-slider-section {
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden !important;
+      position: relative;
+      touch-action: pan-y;
+    }
+
+    .track-viewport {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden !important;
+      position: relative;
+    }
+
+    .food-track {
+      width: max-content;
+      max-width: none;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .food-track .gallery-card {
+      flex-shrink: 0;
+    }
+
+
+
+    /* COMPACT REVIEWS CAROUSEL */
+    .reviews-section {
+      width: 100%;
+      overflow: hidden;
+      background: #f7f7f5;
+      padding: 76px 0;
+    }
+    .reviews-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .reviews-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .reviews-header h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: .98;
+      font-weight: 300;
+      letter-spacing: -.04em;
+      margin-top: 12px;
+    }
+    .reviews-header p {
+      max-width: 330px;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .reviews-viewport {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+    .reviews-track {
+      display: flex;
+      width: 100%;
+      transform: translate3d(0,0,0);
+      transition: transform .45s cubic-bezier(.16,1,.3,1);
+      will-change: transform;
+    }
+    .review-slide {
+      flex: 0 0 100%;
+      min-width: 100%;
+      padding: 34px;
+      background: #fff;
+      border: 1px solid #e8e8e5;
+      border-radius: 22px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.06);
+    }
+    .review-stars { letter-spacing: 2px; font-size: 14px; margin-bottom: 18px; }    .review-text {
+      font-size: clamp(18px, 2.2vw, 25px);
+      line-height: 1.45;
+      font-weight: 400;
+      max-width: 760px;
+    }
+    .review-author {
+      margin-top: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .review-meta { margin-top: 4px; color: #888; font-size: 11px; }
+    .reviews-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .review-arrows { display:flex; gap:8px; }
+    .review-arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid #d7d7d3;
+      background: #fff;
+      color: #1c1c1c;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .review-dots { display:flex; gap:7px; }
+    .review-dot {
+      width: 7px;
+      height: 7px;
+      border: 0;
+      border-radius: 50%;
+      background: #c9c9c4;
+      padding: 0;
+      cursor: pointer;
+    }
+    .review-dot.active { background: #1c1c1c; transform: scale(1.2); }
+    @media (max-width: 700px) {
+      .reviews-section { padding: 58px 0; }
+      .reviews-header { display:block; margin-bottom: 22px; }
+      .reviews-header p { margin-top: 14px; }
+      .review-slide { padding: 25px 21px; border-radius: 18px; }
+      .reviews-viewport { border-radius: 18px; }
+    }
+
+    /* The old reviews slider is intentionally removed. */
+    .testimonial-card,
+    .testimonial-card + .testimonial-card {
+      display: none !important;
+    }
+
+    .reservation-section {
+      width: 100%;
+      background: #272727;
+      color: #fff;
+      padding: 80px 30px;
+      margin: 20px 0 0;
+    }
+
+    .reservation-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .reservation-intro h2 {
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 300;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin: 18px 0;
+    }
+
+    .reservation-intro p {
+      color: rgba(255,255,255,.72);
+      max-width: 460px;
+    }
+
+    .reservation-location {
+      margin-top: 30px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.78);
+    }
+
+    .reservation-booking {
+      background: #fff;
+      color: #1c1c1c;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    }
+
+    .reservation-days,
+    .reservation-slots {
+      display: grid;
+      gap: 10px;
+    }
+
+    .reservation-days {
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 20px;
+    }
+
+    .reservation-slots {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reservation-day,
+    .reservation-slot {
+      appearance: none;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #1c1c1c;
+      border-radius: 12px;
+      min-height: 52px;
+      padding: 12px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .reservation-day.active,
+    .reservation-slot:hover,
+    .reservation-slot.selected {
+      background: #1c1c1c;
+      color: #fff;
+      border-color: #1c1c1c;
+    }
+
+    .reservation-selected {
+      min-height: 24px;
+      margin: 20px 0 14px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .reservation-cta {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: #1c1c1c;
+      color: #fff;
+      border-radius: 999px;
+      padding: 15px 18px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .reservation-cta:hover {
+      background: #000;
+    }
+
+    @media (max-width: 700px) {
+      .hero-section {
+        margin: 10px;
+        max-width: calc(100vw - 20px);
+        min-height: 600px;
+        height: 82vh;
+        padding: 20px;
+      }
+
+      .hero-title-panel {
+        width: 100%;
+      }
+
+      .hero-giant-title {
+        font-size: clamp(42px, 15vw, 76px);
+        left: 0;
+        right: 0;
+      }
+
+      .hero-bottom-content {
+        width: 100%;
+      }
+
+      .hero-stat-cards {
+        display: none;
+      }
+
+      .reservation-section {
+        padding: 55px 20px;
+      }
+
+      .reservation-inner {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .reservation-booking {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .reservation-days,
+      .reservation-slots {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .horizontal-slider-section {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .track-wrapper {
+        gap: 14px;
+      }
+
+      .gallery-card {
+        width: min(78vw, 340px);
+      }
+    }
+
+  </style>
+<link rel="stylesheet" href="snacks-dany-menu.css">
+</head>
+<body>
+
+  <!-- 1. HERO SECTION -->
+  <section class="hero-section" id="home">
+    <img class="hero-bg" id="heroBgImg" src="assets/snacks-dany-hero.jpeg" alt="SNACK’S DANY restaurant dishes">
+    <div class="hero-image-overlay" aria-hidden="true"></div>
+    
+    <nav class="nav-bar">
+      <div class="logo-mark">KK</div>
+      <ul class="nav-links">
+        <li><a href="#home">Accueil</a></li>
+        <li><a href="#about">À Propos</a></li>
+        <li><a href="#catalog">Catalogue</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="btn-outline">Réserver un Sejour / RDV</a>
+    </nav>
+
+    <div class="hero-title-panel fade-in">
+      <div class="hero-giant-title">
+        SNACK’S DANY
+        <span>PARIS</span>
+      </div>
+    </div>
+
+    <div class="hero-bottom-content fade-in fade-in-delay-1">
+      <div class="hero-description">
+        <h2>Une symphonie culinaire guidée par la passion et les produits de saison</h2>
+        <p>Gastronomie Africaine Raffinée</p>
+        <a href="#catalog" class="btn-white">Réserver une Table</a>
+      </div>
+
+      <div class="hero-stat-cards">
+        <div class="stat-card-small">
+          <h3>+600</h3>
+          <p>clients satisfaits</p>
+        </div>
+        <div class="stat-card-large">
+          <img src="https://i.pinimg.com/originals/49/7f/39/497f396f81ac9f174bb3b62725128621.jpg" alt="Feature thumbnail">
+          <div class="num">328</div>
+          <div class="sub">projets d’exception livrés</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ABOUT SECTION -->
+  <section class="section-padding container" id="about">
+    <div class="section-grid">
+      <div class="section-label fade-in">À PROPOS</div>
+      <div>
+        <p class="about-lead-text fade-in fade-in-delay-1">
+          <span>DEPUIS DES ANNÉES, NOS CHEFS FAÇONNENT DES ASSIETTES SIGNATURES POUR ÉVEILLER VOS SENS ET CÉLÉBRER LE GOÛT.</span> NOUS SÉLECTIONNONS EXCLUSIVEMENT DES PRODUITS FRAIS, LOCAUX ET DE SAISON POUR DES EXPÉRIENCES CULINAIRES D'EXCEPTION.
+        </p>
+
+        <div class="stats-row fade-in fade-in-delay-2">
+          <div class="stat-item">
+            <h3>12+ Ans</h3>
+            <p>Savoir-faire éprouvé et connaissance approfondie du secteur.</p>
+          </div>
+          <div class="stat-item">
+            <h3>1,256+ Clients</h3>
+            <p>Fidélisés par la qualité de nos prestations et nos recommandations.</p>
+          </div>
+          <div class="stat-item">
+            <h3>35+ Experts</h3>
+            <p>Conseillers dédiés, experts techniques et gestionnaires à votre service.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 3. RESERVATION SECTION -->
+  
+
+<section class="food-gallery" aria-label="Photos de SNACK’S DANY">
+  <div class="food-gallery-track">
+    <figure class="food-gallery-slide"><img src="assets/dany-food-2.jpeg" alt="Plat africain de SNACK’S DANY" loading="lazy"></figure>
+    <figure class="food-gallery-slide"><img src="assets/dany-food-3.jpeg" alt="Banane plantain et spécialités africaines" loading="lazy"></figure>
+    <figure class="food-gallery-slide"><img src="assets/dany-food-4.jpeg" alt="Assortiment de plats africains" loading="lazy"></figure>
+    <figure class="food-gallery-slide"><img src="assets/dany-food-5.jpeg" alt="Plats et boissons africains" loading="lazy"></figure>
+  </div>
+</section>
+
+<section class="menu-section" id="menu" aria-labelledby="menu-title">
+  <div class="menu-heading">
+    <span class="menu-eyebrow">À LA CARTE</span>
+    <h2 id="menu-title">Notre Menu</h2>
+    <p>Les saveurs d’Afrique, préparées avec passion et servies généreusement.</p>
+  </div>
+  <div class="menu-grid">
+    <article class="menu-card">
+      <h3>Volailles &amp; Viandes</h3>
+      <div class="menu-item"><div><strong>Demi poulet</strong><small>Braisé ou frit</small></div><b>15€</b></div>
+      <div class="menu-item"><div><strong>Ailes de poulet (7 pièces)</strong><small>Braisées ou frites</small></div><b>15€</b></div>
+      <div class="menu-item"><div><strong>Yassa poulet</strong><small>Poulet mariné citron &amp; oignons confits</small></div><b>15€</b></div>
+      <div class="menu-item"><div><strong>Poulet DG</strong><small>Poulet, plantains &amp; légumes sautés</small></div><b>Selon portion</b></div>
+    </article>
+    <article class="menu-card">
+      <h3>Poissons</h3>
+      <div class="menu-item"><div><strong>Maboké (liboké)</strong><small>Poisson cuit à l’étouffée en feuilles</small></div><b>18€</b></div>
+      <div class="menu-item"><div><strong>Poisson chat</strong><small>Silure braisé ou frit</small></div><b>18€</b></div>
+      <div class="menu-item"><div><strong>Poisson salé (makayabu)</strong><small>Poisson salé, spécialité festive</small></div><b>17€</b></div>
+      <div class="menu-item"><div><strong>Crevettes</strong><small>Sautées, parfumées aux épices</small></div><b>20€</b></div>
+      <div class="menu-item"><div><strong>Poisson sole</strong><small>Grillé ou en sauce, au choix</small></div><b>Selon arrivage</b></div>
+    </article>
+    <article class="menu-card">
+      <h3>Bouillons &amp; Grillades</h3>
+      <div class="menu-item"><div><strong>Bouillon de bar ou capitaine</strong><small>Poisson en bouillon parfumé</small></div><b>25€</b></div>
+      <div class="menu-item"><div><strong>Bouillon poisson</strong></div><b>18€</b></div>
+      <div class="menu-item"><div><strong>Bouillon de mouton</strong></div><b>17€</b></div>
+      <div class="menu-item"><div><strong>Bouillon queue de bœuf</strong></div><b>17€</b></div>
+      <div class="menu-item"><div><strong>Bouillon porc</strong></div><b>16€</b></div>
+      <div class="menu-item"><div><strong>Chèvre grillée</strong></div><b>12€</b></div>
+      <div class="menu-item"><div><strong>Porc grillé</strong></div><b>12€</b></div>
+    </article>
+    <article class="menu-card">
+      <h3>Accompagnements</h3>
+      <div class="menu-item"><div><strong>Chikwang (kwanga)</strong><small>Pâte de manioc traditionnelle</small></div><b>4€</b></div>
+      <div class="menu-item"><div><strong>Makemba</strong><small>Banane plantain</small></div><b>4€</b></div>
+      <div class="menu-item"><div><strong>Mikate</strong><small>Beignets congolais</small></div><b>4€</b></div>
+      <div class="menu-item"><div><strong>Fufu</strong><small>Pâte de manioc</small></div><b>4€</b></div>
+      <div class="menu-item"><div><strong>Riz</strong></div><b>3€</b></div>
+      <div class="menu-item"><div><strong>Salade</strong></div><b>5€</b></div>
+    </article>
+  </div>
+</section>
+
+<section class="reservation-section" id="reservation">
+    <div class="reservation-inner">
+      <div class="reservation-intro">
+        <div class="section-label">RÉSERVER UNE TABLE</div>
+        <h2>Choisissez votre moment</h2>
+        <p>Private dining room • Vegetarian options • Good for watching sport</p>
+        <div class="reservation-location">
+          <strong>59 Rue Belliar</strong><br>
+          59 Rue Belliar<br>
+          Paris, France
+        </div>
+      </div>
+      <div class="reservation-booking">
+        <div class="reservation-days" role="tablist" aria-label="Choisir le jour">
+          <button type="button" class="reservation-day active" data-day="Today">Today</button>
+          <button type="button" class="reservation-day" data-day="Tomorrow">Tomorrow</button>
+        </div>
+        <div class="reservation-slots" aria-label="Choisir une heure">
+          <button type="button" class="reservation-slot" data-time="6:30 PM">6:30 PM</button>
+          <button type="button" class="reservation-slot" data-time="6:45 PM">6:45 PM</button>
+          <button type="button" class="reservation-slot" data-time="7:00 PM">7:00 PM</button>
+          <button type="button" class="reservation-slot" data-time="7:10 PM">7:10 PM</button>
+        </div>
+        <div class="reservation-selected" aria-live="polite">Sélectionnez une heure</div>
+        <a class="reservation-cta" id="reservationCta" href="tel:+33758361924">Réserver par téléphone · +33758361924</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. REVIEWS -->
+  <section class="reviews-section" id="reviews" aria-label="Avis clients">
+    <div class="reviews-inner">
+      <div class="reviews-header">
+        <div>
+          <div class="section-label">AVIS CLIENTS</div>
+          <h2>Ils parlent de<br>SNACK’S DANY</h2>
+        </div>
+        <p>Une sélection de retours clients présentée dans un carousel compact, sans débordement horizontal.</p>
+      </div>
+
+      <div class="reviews-viewport">
+        <div class="reviews-track" id="reviewsTrack">
+          <article class="review-slide">
+            <div class="review-stars" aria-label="5 étoiles">★★★★★</div>
+            <p class="review-text">“Une très belle découverte. Les plats sont généreux, savoureux et l'accueil est vraiment chaleureux. Nous reviendrons avec plaisir.”</p>
+            <div class="review-author">Sophie M.</div>
+            <div class="review-meta">Cliente</div>
+          </article>
+          <article class="review-slide">
+            <div class="review-stars" aria-label="5 étoiles">★★★★★</div>
+            <p class="review-text">“Excellent moment entre amis. Les portions sont généreuses et les saveurs sont au rendez-vous. Une adresse que je recommande.”</p>
+            <div class="review-author">Thomas R.</div>
+            <div class="review-meta">Client</div>
+          </article>
+          <article class="review-slide">
+            <div class="review-stars" aria-label="5 étoiles">★★★★★</div>
+            <p class="review-text">“Cuisine pleine de caractère, service agréable et ambiance conviviale. Parfait pour partager un bon repas.”</p>
+            <div class="review-author">Aïcha D.</div>
+            <div class="review-meta">Cliente</div>
+          </article>
+        </div>
+      </div>
+
+      <div class="reviews-controls">
+        <div class="review-arrows">
+          <button class="review-arrow" id="reviewPrev" type="button" aria-label="Avis précédent">←</button>
+          <button class="review-arrow" id="reviewNext" type="button" aria-label="Avis suivant">→</button>
+        </div>
+        <div class="review-dots" aria-label="Navigation des avis">
+          <button class="review-dot active" type="button" data-review="0" aria-label="Avis 1"></button>
+          <button class="review-dot" type="button" data-review="1" aria-label="Avis 2"></button>
+          <button class="review-dot" type="button" data-review="2" aria-label="Avis 3"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. DESIGN PROCESS SECTION -->
+  <section class="process-section">
+    <img class="process-bg-img" src="https://i.pinimg.com/originals/46/32/43/463243e9ee86506a083cde2c726a52f4.webp" alt="Process Background">
+    <div class="process-overlay"></div>
+
+    <div class="process-header fade-in">NOTRE MÉTHODE</div>
+
+    <div class="process-grid">
+      <div class="process-card fade-in fade-in-delay-1">
+        <div class="card-num">01</div>
+        <div>
+          <div class="card-title">SOURCING NOBLE</div>
+          <div class="card-desc">sélection rigoureuse de producteurs locaux et d’ingrédients d’exception.</div>
+        </div>
+      </div>
+
+      <div class="process-card offset fade-in fade-in-delay-2">
+        <div class="card-num">02</div>
+        <div>
+          <div class="card-title">CRÉATION SIGNATURE</div>
+          <div class="card-desc">élaboration de recettes équilibrées mariant tradition et modernité.</div>
+        </div>
+      </div>
+
+      <div class="process-card fade-in fade-in-delay-1">
+        <div class="card-num">03</div>
+        <div>
+          <div class="card-title">ACCORDS ET DRESSAGE</div>
+          <div class="card-desc">mises en place raffinées et accords mets-vins conçus par nos sommeliers.</div>
+        </div>
+      </div>
+
+      <div class="process-card offset fade-in fade-in-delay-2">
+        <div class="card-num">04</div>
+        <div>
+          <div class="card-title">SERVICE EN LIGNE</div>
+          <div class="card-desc">accueil chaleureux et expérience sur mesure en salle ou sur événement.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CATALOG SECTION -->
+  <section class="section-padding container" id="catalog">
+    <div class="section-label fade-in" style="margin-bottom: 40px;">CATALOGUE & OFFRES</div>
+
+    <div class="catalog-card fade-in">
+      <div class="catalog-img-container">
+        <img id="catalogImg" src="https://blog.unemplacement.com/wp-content/uploads/2020/07/AfriknFusion_Cover-2.jpg" alt="Catalog Feature">
+      </div>
+
+      <div class="catalog-info">
+        <h2 id="catalogTitle">NOTRE CARTE EXQUISE</h2>
+        <p id="catalogDesc">DÉCOUVREZ NOTRE MENU SIGNATURE, UNE FUSION AUDACIEUSE DE SAVEURS TRADITIONNELLES D'AFRIQUE DE L'OUEST ET D'INFLUENCES CONTEMPORAINES. CHAQUE PLAT EST UNE ŒUVRE D'ART.</p>
+
+        <ul class="features-list" id="catalogFeatures">
+          <li>• PRESTATION EXCLUSIVE</li><li>• GARANTIE QUALITÉ</li><li>• SUIVI PERSONNALISÉ</li><li>• ACCOMPAGNEMENT 7J/7</li>
+        </ul>
+
+        <a href="#contact" class="btn-dark">Voir les détails</a>
+      </div>
+    </div>
+
+    <div class="slider-dots">
+      <div class="dot active" onclick="switchCatalog(0)"></div><div class="dot " onclick="switchCatalog(1)"></div><div class="dot " onclick="switchCatalog(2)"></div>
+    </div>
+  </section>
+
+  <!-- 7. FOOD PHOTO SLIDER -->
+  <section class="horizontal-slider-section" aria-label="Photos des plats">
+    <div class="slider-heading fade-in">
+      <span>NOS PLATS</span> — Découvrez quelques-unes des spécialités de SNACK’S DANY.
+    </div>
+    <div class="track-viewport">
+      <div class="track-wrapper food-track">
+        <div class="gallery-card"><img src="food-slider-1.jpg" alt="Plat SNACK’S DANY"><caption>Saveurs généreuses et cuisine africaine.</caption></div>
+        <div class="gallery-card"><img src="food-slider-2.jpg" alt="Plat SNACK’S DANY"><caption>Des assiettes authentiques et gourmandes.</caption></div>
+        <div class="gallery-card"><img src="food-hero.jpg" alt="Sélection de plats SNACK’S DANY"><caption>Une table pensée pour partager.</caption></div>
+        <div class="gallery-card"><img src="food-slider-1.jpg" alt="Plat SNACK’S DANY"><caption>Saveurs généreuses et cuisine africaine.</caption></div>
+        <div class="gallery-card"><img src="food-slider-2.jpg" alt="Plat SNACK’S DANY"><caption>Des assiettes authentiques et gourmandes.</caption></div>
+        <div class="gallery-card"><img src="food-hero.jpg" alt="Sélection de plats SNACK’S DANY"><caption>Une table pensée pour partager.</caption></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CONTACT FORM SECTION -->
+  <section class="contact-card" id="contact">
+    <div class="contact-title fade-in">PRENDRE CONTACT</div>
+
+    <div class="contact-grid">
+      <form class="fade-in fade-in-delay-1" onsubmit="event.preventDefault(); alert('Merci ! Votre demande a bien été envoyée. Nous vous recontactons sous peu.');">
+        <div class="input-group">
+          <input type="text" class="input-field" placeholder="VOTRE NOM COMPLET" required>
+        </div>
+        <div class="input-group">
+          <input type="tel" class="input-field" placeholder="NUMÉRO DE TÉLÉPHONE" required>
+        </div>
+        <div class="input-group">
+          <input type="text" class="input-field" placeholder="VOTRE MESSAGE OU DEMANDE">
+        </div>
+        <button type="submit" class="btn-white" style="margin-top: 20px;">Envoyer la demande</button>
+      </form>
+
+      <div class="contact-text-right fade-in fade-in-delay-2">
+        POUR VOTRE PROJET, BÉNÉFICIEZ D’UNE CONSULTATION INDIVIDUELLE OÙ NOUS RÉPONDRONS À TOUTES VOS QUESTIONS. <span>UN CONSEIL SUR MESURE</span>.
+        <br><br>
+        <strong>+33758361924</strong> — <a href="mailto:contact@SNACK’S DANYparis.com" style="color: inherit;">contact@SNACK’S DANYparis.com</a>
+        <br>
+        <span style="font-size: 11px; opacity: 0.8;">59 Rue Belliar</span>
+
+        <img class="office-preview-img" src="https://cdn.sortiraparis.com/images/80/108567/1125499-assinie-le-restaurant-africain-raffine-a-paris-17e-a7c5658.jpg" alt="Office Studio">
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div>SNACK’S DANY PARIS</div>
+      <div>© 2026 SNACK’S DANY PARIS. Tous droits réservés.</div>
+      <div class="footer-links">
+        <a href="#about">À Propos</a>
+        <a href="#catalog">Catalogue</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- JS ANIMATIONS & AUTOMATED SLIDERS -->
+  <script>
+    // Remove any image that fails to load instead of leaving a broken/empty placeholder.
+    function hideBrokenImage(img) {
+      if (!img || img.dataset.imageFailed === 'true') return;
+      img.dataset.imageFailed = 'true';
+      img.classList.add('image-unavailable');
+
+      // Keep layouts clean when a whole image container becomes unusable.
+      const container = img.closest('.catalog-img-container');
+      if (container) container.classList.add('image-unavailable');
+    }
+
+    document.querySelectorAll('img').forEach(img => {
+      if (img.complete && img.naturalWidth === 0) hideBrokenImage(img);
+      img.addEventListener('error', () => hideBrokenImage(img), { once: true });
+    });
+
+    // 1. Intersection Observer for Scroll Animations
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // 2. Interactive Catalog Carousel Data
+    const catalogData = [{"title":"NOTRE CARTE EXQUISE","desc":"DÉCOUVREZ NOTRE MENU SIGNATURE, UNE FUSION AUDACIEUSE DE SAVEURS TRADITIONNELLES D'AFRIQUE DE L'OUEST ET D'INFLUENCES CONTEMPORAINES. CHAQUE PLAT EST UNE ŒUVRE D'ART.","img":"https://blog.unemplacement.com/wp-content/uploads/2020/07/AfriknFusion_Cover-2.jpg","features":["• PRESTATION EXCLUSIVE","• GARANTIE QUALITÉ","• SUIVI PERSONNALISÉ","• ACCOMPAGNEMENT 7J/7"]},{"title":"RÉSERVATION DE TABLE","desc":"FACILITEZ VOTRE VENUE EN RÉSERVANT VOTRE TABLE À L'AVANCE. QUE CE SOIT POUR UN DÎNER INTIME OU UNE CÉLÉBRATION SPÉCIALE, NOUS VOUS ATTENDONS.","img":"https://img.freepik.com/photos-premium/illustration-numerique-vieil-africain-fictif-habille-comme-pere-noel_451583-33.jpg","features":["• PRESTATION EXCLUSIVE","• GARANTIE QUALITÉ","• SUIVI PERSONNALISÉ","• ACCOMPAGNEMENT 7J/7"]},{"title":"SERVICE TRAITEUR & ÉVÉNEMENTS","desc":"APPORTEZ L'EXPÉRIENCE SNACK’S DANY PARIS À VOS ÉVÉNEMENTS. NOS SERVICES TRAITEUR PERSONNALISÉS SONT PARFAITS POUR VOS RÉCEPTIONS PRIVÉES OU D'ENTREPRISE.","img":"https://www.aumenuilya.com/wp-content/uploads/2024/03/1711672115_decouverte-culinaire-10-plats-africains-incontournables.jpg","features":["• PRESTATION EXCLUSIVE","• GARANTIE QUALITÉ","• SUIVI PERSONNALISÉ","• ACCOMPAGNEMENT 7J/7"]}];
+
+    let currentCatalogIndex = 0;
+
+    function switchCatalog(index) {
+      if (!catalogData || catalogData.length === 0) return;
+      currentCatalogIndex = index % catalogData.length;
+      const data = catalogData[currentCatalogIndex];
+      
+      const imgEl = document.getElementById('catalogImg');
+      const titleEl = document.getElementById('catalogTitle');
+      const descEl = document.getElementById('catalogDesc');
+      const featuresEl = document.getElementById('catalogFeatures');
+
+      if (imgEl) {
+        imgEl.style.opacity = '0';
+        setTimeout(() => {
+          imgEl.onerror = () => hideBrokenImage(imgEl);
+          imgEl.src = data.img;
+          if (titleEl) titleEl.textContent = data.title;
+          if (descEl) descEl.textContent = data.desc;
+          if (featuresEl && data.features) {
+            featuresEl.innerHTML = data.features.map(f => '<li>' + f + '</li>').join('');
+          }
+          imgEl.style.opacity = '1';
+        }, 200);
+      }
+
+      const dots = document.querySelectorAll('.slider-dots .dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentCatalogIndex);
+      });
+    }
+
+    // Auto-advance catalog slider every 5 seconds
+    setInterval(() => {
+      if (catalogData && catalogData.length > 1) {
+        currentCatalogIndex = (currentCatalogIndex + 1) % catalogData.length;
+        switchCatalog(currentCatalogIndex);
+      }
+    }, 5000);
+
+    // 3. PostMessage Handler for Live Image & Text Analysis Modifications
+    window.addEventListener('message', function(event) {
+      if (!event.data) return;
+      var data = event.data;
+      if (data.type === 'UPDATE_IMAGE' && data.field) {
+        if (data.field === 'heroImage' && data.url) {
+          var bg = document.getElementById('heroBgImg');
+          if (bg) {
+            bg.classList.remove('image-unavailable');
+            bg.onerror = () => hideBrokenImage(bg);
+            bg.src = data.url;
+          }
+        }
+        if (data.field === 'aboutImage' && data.url) {
+          var office = document.querySelector('.office-preview-img');
+          if (office) office.src = data.url;
+        }
+      }
+    });
+  
+
+    // Compact reviews carousel: bounded inside its viewport and never changes page width.
+    (function () {
+      const track = document.getElementById('reviewsTrack');
+      const prev = document.getElementById('reviewPrev');
+      const next = document.getElementById('reviewNext');
+      const dots = Array.from(document.querySelectorAll('.review-dot'));
+      if (!track || !prev || !next || !dots.length) return;
+      let index = 0;
+      let timer;
+
+      function renderReview(nextIndex) {
+        index = (nextIndex + 3) % 3;
+        track.style.transform = `translate3d(-${index * 100}%, 0, 0)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+      function restartAuto() {
+        clearInterval(timer);
+        timer = setInterval(() => renderReview(index + 1), 6000);
+      }
+      prev.addEventListener('click', () => { renderReview(index - 1); restartAuto(); });
+      next.addEventListener('click', () => { renderReview(index + 1); restartAuto(); });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { renderReview(i); restartAuto(); }));
+      restartAuto();
+    })();
+
+    // Reservation picker
+    (function () {
+      const days = document.querySelectorAll('.reservation-day');
+      const slots = document.querySelectorAll('.reservation-slot');
+      const selected = document.querySelector('.reservation-selected');
+      let chosenDay = 'Today';
+      let chosenTime = '';
+
+      days.forEach(day => {
+        day.addEventListener('click', () => {
+          days.forEach(d => d.classList.remove('active'));
+          day.classList.add('active');
+          chosenDay = day.dataset.day;
+          updateReservation();
+        });
+      });
+
+      slots.forEach(slot => {
+        slot.addEventListener('click', () => {
+          slots.forEach(s => s.classList.remove('selected'));
+          slot.classList.add('selected');
+          chosenTime = slot.dataset.time;
+          updateReservation();
+        });
+      });
+
+      function updateReservation() {
+        if (chosenTime) {
+          selected.textContent = `Demande : ${chosenDay} à ${chosenTime}`;
+        } else {
+          selected.textContent = `Choisissez une heure pour ${chosenDay}`;
+        }
+      }
+    })();
+
+    // Prevent horizontal gallery tracks from becoming draggable/scrollable.
+    document.querySelectorAll('.track-wrapper').forEach(track => {
+      track.addEventListener('dragstart', e => e.preventDefault());
+    });
+
+  </script>
+</body>
+</html>
