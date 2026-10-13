@@ -198,3 +198,7 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 /* Original HTML runs within a scrollable frame, preserving its own CSS, JS and breakpoints. */
 .dany-original-frame{display:block;width:100%;height:min(82vh,1000px);min-height:630px;border:0;background:#272727}
 .preview.mobile .dany-original-frame{height:78vh;min-height:560px}
+
+.dany-zip-upload{display:block;margin:15px 0;border:1px dashed #c3b49e;border-radius:9px;padding:12px;font-size:12px;color:#6d5b47}
+.dany-zip-upload input{display:block;width:100%;font-size:11px;padding:9px;margin:7px 0;background:#fff}
+.dany-zip-upload small{font-size:10px;line-height:1.5;color:#89817a}
