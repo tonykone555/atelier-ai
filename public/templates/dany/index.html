@@ -1246,7 +1246,26 @@ html,body{max-width:100%;overflow-x:hidden}
 .hero-food-image{width:100%;overflow:hidden}
 .hero-food-image img{display:block;width:100%;height:auto;max-height:78vh;object-fit:cover}
 @media(max-width:700px){.hero-food-image img{width:100%;height:auto;max-height:72vh;object-fit:cover}}</style>
-</head>
+<style id="atelier-mobile-layout-fix">
+html,body{max-width:100%;overflow-x:hidden}
+.hero-giant-title{overflow-wrap:anywhere;word-break:normal;max-width:calc(100% - 50px);box-sizing:border-box}
+.dany-dynamic-rail{max-width:100%;width:100%;box-sizing:border-box}
+.dany-dynamic-item{flex:0 0 min(76vw,290px);min-width:0}
+@media(max-width:700px){
+.hero-section{height:auto;min-height:650px;margin:10px;border-radius:24px;padding:24px 22px;overflow:hidden}
+.hero-giant-title{position:relative;top:auto;left:auto;right:auto;width:100%;max-width:100%;font-size:clamp(44px,12vw,84px);line-height:.95;letter-spacing:-.055em;overflow-wrap:anywhere;hyphens:auto;word-break:break-word;margin:90px 0 80px}
+.hero-giant-title span{font-size:.42em}
+.hero-bottom-content{flex-direction:column;align-items:flex-start;gap:25px}
+.hero-description{max-width:100%}
+.hero-description h2{font-size:clamp(25px,7vw,35px)}
+.nav-links{display:none!important}
+.nav-bar{gap:12px}
+.dany-dynamic-menu-section{padding:30px 14px}
+.dany-dynamic-rail{gap:12px}
+.dany-dynamic-item{flex:0 0 min(72vw,290px)}
+.dany-dynamic-item img,.dany-dynamic-image-empty{height:170px}
+}
+</style></head>
 <body>
 
   <!-- 1. HERO SECTION -->
