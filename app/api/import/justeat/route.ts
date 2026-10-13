@@ -11,6 +11,7 @@ function transform(rows:Record<string,unknown>[],url:string){const swiss=new URL
 function decode(s:string){return s.replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&quot;/gi,'"').replace(/&apos;|&#39;/gi,"'").replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n)))}
 function strip(s:string){return decode(s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ')).trim()}
 function piece(s:string,start:string,end:string){const i=s.indexOf(start);if(i<0)return '';const from=i+start.length;const j=s.indexOf(end,from);return j<0?s.slice(from):s.slice(from,j)}
+function cardPhoto(card:string){const tags=card.match(/<img\b[^>]*>/gi)||[];for(const tag of tags){const attrs=['src','data-src','data-original','data-lazy-src','srcset','data-srcset'];for(const attr of attrs){const match=tag.match(new RegExp('(?:^|\\s)'+attr+'=["\\']([^"\\']+)["\\']','i'));if(!match)continue;const value=decode(match[1]);const candidates=attr.includes('srcset')?value.split(',').map(x=>x.trim().split(/\\s+/)[0]):[value];for(const candidate of candidates){if(/^https:\/\//i.test(candidate)&&!/(placeholder|blank\\.|data:image)/i.test(candidate))return candidate}}}return null}
 function extractMenu(html:string,url:string){
  const items:ReturnType<typeof transform>=[],seen=new Set<string>();
  const categoryBlocks=html.split(/<section\b[^>]*data-qa="item-category"[^>]*>/i);
@@ -40,8 +41,11 @@ function extractMenu(html:string,url:string){
   const priceText=strip(piece(part,'popular-item-style_info__','</div>'));
   const m=priceText.match(/(\d{1,5}(?:[.,]\d{2})?)\s*(?:CHF|€|£)/);
   const img=part.match(/<img\b[^>]*\bsrc="(https:[^"]+)"[^>]*>/i);
-  items.push({id:'highlight-'+items.length,name,description:'',category:'Highlights',price:m?Number(m[1].replace(',','.')):null,currency:'CHF',variations:[],sourceUrl:url,imageUrl:img?decode(img[1]):null,imageStatus:img?'available':'missing'});
+  items.push({id:'highlight-'+items.length,name,description:'',category:'Highlights',price:m?Number(m[1].replace(',','.')):null,currency:'CHF',variations:[],sourceUrl:url,imageUrl,imageStatus:imageUrl?'available':'missing'});
  }
+ // A dish can appear in both Highlights and its category. Reuse its verified image,
+ // but never assign a photo from a different product.
+ const byName=new Map<string,string>();for(const item of items){if(item.imageUrl)byName.set(item.name.trim().toLowerCase(),item.imageUrl)}for(const item of items){if(!item.imageUrl){const found=byName.get(item.name.trim().toLowerCase());if(found){item.imageUrl=found;item.imageStatus='available'}}}
  return items;
 }
 function apify(url:string,token:string,method='GET',body?:unknown){return fetch('https://api.apify.com/v2/'+url,{method,headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:AbortSignal.timeout(20000)})}
