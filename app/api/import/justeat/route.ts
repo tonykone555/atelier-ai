@@ -15,7 +15,7 @@ function extractMenu(html:string,url:string){
  const items:ReturnType<typeof transform>=[],seen=new Set<string>();
  const categoryBlocks=html.split(/<section\b[^>]*data-qa="item-category"[^>]*>/i);
  for(const section of categoryBlocks.slice(1)){
-  const heading=strip(piece(section,'data-qa="heading">','</h2>'))||'Menu';
+  const headingHtml=piece(section,'data-qa="heading">','</h2>');const heading=strip(piece(headingHtml,'aria-hidden="true">','</span>'))||strip(headingHtml)||'Menu';
   const cards=section.split(/<li\b[^>]*data-item-id="([^"]+)"[^>]*>/i);
   for(let i=1;i<cards.length;i+=2){
    const id=cards[i],card=cards[i+1].split('</li>')[0];
