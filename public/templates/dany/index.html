@@ -1265,6 +1265,29 @@ html,body{max-width:100%;overflow-x:hidden}
 .dany-dynamic-item{flex:0 0 min(72vw,290px)}
 .dany-dynamic-item img,.dany-dynamic-image-empty{height:170px}
 }
+</style><style id="atelier-dany-complete">
+.dany-dynamic-menu-section{background:#151513!important;color:#f8f3e9!important;padding:clamp(32px,6vw,90px) clamp(16px,5vw,72px)!important;border-radius:0!important}
+.dany-dynamic-group{margin:40px 0 58px!important}
+.dany-dynamic-group h3{font-size:clamp(28px,5vw,55px)!important;font-weight:500!important;margin-bottom:22px!important;letter-spacing:-.045em!important}
+.dany-dynamic-rail{gap:16px!important;scroll-padding:15px;scroll-snap-type:x mandatory}
+.dany-dynamic-item{background:#292825!important;color:#f6f0e7!important;border:1px solid #48443e!important;border-radius:17px!important;flex:0 0 clamp(220px,30vw,330px)!important;min-width:0!important;max-width:none!important}
+.dany-dynamic-item img,.dany-dynamic-image-empty{height:clamp(175px,22vw,240px)!important;object-fit:cover}
+.dany-dynamic-item-body{padding:19px!important;gap:11px!important}
+.dany-dynamic-item-body strong{font-size:clamp(18px,2vw,23px)!important;line-height:1.2}
+.dany-dynamic-item-body small{color:#bfb8ac!important}
+.dany-dynamic-item-body b{color:#e7c69b!important;font-size:17px}
+.dany-dynamic-group::after{content:"← Swipe to explore →";display:block;margin-top:12px;color:#938c82;font-size:11px;letter-spacing:.12em}
+.dany-extra-footer{background:#0d0d0c;color:#f7f1e7;padding:clamp(30px,5vw,70px) clamp(20px,6vw,85px)}
+.dany-footer-top{display:flex;justify-content:space-between;gap:30px;align-items:start}
+.dany-footer-top h2{font-size:clamp(29px,5vw,64px);line-height:1.05;letter-spacing:-.055em;font-weight:400;margin:10px 0 20px;overflow-wrap:anywhere}
+.dany-footer-top p{color:#b7afa4;max-width:500px;line-height:1.65;font-size:13px}
+.dany-footer-cta{display:inline-flex;align-items:center;background:#d6ad7d;color:#14110d;padding:15px 25px;border-radius:30px;font-size:13px;font-weight:700;text-decoration:none}
+.dany-footer-bottom{border-top:1px solid #3a3630;margin-top:50px;padding-top:19px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8c857b;font-size:11px}
+.dany-category-pills{display:flex;gap:9px;overflow:auto;scrollbar-width:none;padding:20px 0 4px;margin-bottom:24px}
+.dany-category-pills a{flex:0 0 auto;text-decoration:none;color:#e8d8c3;border:1px solid #65584a;padding:11px 17px;border-radius:30px;font-size:12px}
+.dany-category-pills a:hover{background:#d6ad7d;color:#181410}
+.dany-hero-fallback{background:linear-gradient(140deg,#161513,#514030 50%,#131313)!important}
+@media(max-width:700px){.dany-dynamic-menu-section{padding:35px 16px!important}.dany-dynamic-item{flex-basis:76%!important}.dany-footer-top{flex-direction:column}.dany-footer-bottom{flex-direction:column}.dany-dynamic-group{margin:35px 0 45px!important}}
 </style></head>
 <body>
 
@@ -1794,8 +1817,9 @@ function applyImportedRestaurant(message){
  if(originalMenu){
   originalMenu.innerHTML='';
   const categories=[...new Set(items.map(x=>String(x.category||'Menu').slice(0,100)))];
+  if(categories.length){const pills=document.createElement('nav');pills.className='dany-category-pills';pills.setAttribute('aria-label','Catégories du menu');categories.forEach((cat,i)=>{const a=document.createElement('a');a.href='#dany-category-'+i;a.textContent=cat;pills.appendChild(a)});originalMenu.appendChild(pills)}
   for(const category of categories){
-   const group=document.createElement('section');group.className='dany-dynamic-group';
+   const group=document.createElement('section');group.className='dany-dynamic-group';group.id='dany-category-'+categories.indexOf(category);
    const h=document.createElement('h3');h.textContent=category;group.appendChild(h);
    const rail=document.createElement('div');rail.className='dany-dynamic-rail';
    for(const dish of items.filter(x=>(x.category||'Menu')===category)){
@@ -1813,7 +1837,7 @@ function applyImportedRestaurant(message){
   const heading=document.querySelector('#menu .menu-heading p');safeText(heading,items.length+' plats · '+categories.length+' catégories');
  }
  const realPhotos=items.filter(x=>typeof x.imageUrl==='string'&&/^https:\/\//.test(x.imageUrl));
- const heroImg=document.querySelector('#heroBgImg');if(heroImg&&realPhotos[0]){heroImg.src=realPhotos[0].imageUrl;heroImg.alt=realPhotos[0].name}
+ const heroImg=document.querySelector('#heroBgImg');if(heroImg){if(realPhotos[0]){heroImg.src=realPhotos[0].imageUrl;heroImg.alt=realPhotos[0].name;heroImg.onerror=()=>{heroImg.style.display='none';heroImg.parentElement?.classList.add('dany-hero-fallback')}}else{heroImg.style.display='none';heroImg.parentElement?.classList.add('dany-hero-fallback')}}
  const foodTrack=document.querySelector('.food-track');
  if(foodTrack&&realPhotos.length){
   foodTrack.innerHTML='';
@@ -1824,6 +1848,14 @@ function applyImportedRestaurant(message){
   }
  }
  // Do not present SNACK'S DANY's address, telephone, metrics, and reviews as verified facts for another venue.
+ const oldFooter=document.querySelector('.dany-extra-footer');if(oldFooter)oldFooter.remove();
+ const footer=document.createElement('footer');footer.className='dany-extra-footer';
+ const top=document.createElement('div');top.className='dany-footer-top';
+ const info=document.createElement('div');const eyebrow=document.createElement('small');eyebrow.textContent='BON APPÉTIT · À BIENTÔT';info.appendChild(eyebrow);
+ const title=document.createElement('h2');title.textContent=name;info.appendChild(title);
+ const description=document.createElement('p');description.textContent=items.length?items.length+' plats à découvrir dans notre carte. Consultez les prix et les disponibilités auprès du restaurant.':'Découvrez notre restaurant et consultez les informations de commande.';info.appendChild(description);top.appendChild(info);
+ if(data.sourceUrl&&/^https:\/\//.test(data.sourceUrl)){const cta=document.createElement('a');cta.className='dany-footer-cta';cta.href=data.sourceUrl;cta.target='_blank';cta.rel='noopener noreferrer';cta.textContent='Voir les commandes et horaires ↗';top.appendChild(cta)}
+ footer.appendChild(top);const bottom=document.createElement('div');bottom.className='dany-footer-bottom';const brand=document.createElement('span');brand.textContent=name;bottom.appendChild(brand);const notice=document.createElement('span');notice.textContent='Photos et prix issus du menu importé · Vérifiez les informations avant publication';bottom.appendChild(notice);footer.appendChild(bottom);document.body.appendChild(footer);
  const reservation=document.querySelector('#reservation');if(reservation){reservation.style.display='none';}
  const reviews=document.querySelector('#reviews');if(reviews){reviews.style.display='none'}
  const about=document.querySelector('#about');if(about){about.style.display='none'}
