@@ -12,6 +12,8 @@ function decode(s:string){return s.replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;
 function strip(s:string){return decode(s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ')).trim()}
 function piece(s:string,start:string,end:string){const i=s.indexOf(start);if(i<0)return '';const from=i+start.length;const j=s.indexOf(end,from);return j<0?s.slice(from):s.slice(from,j)}
 function cardPhoto(card:string){const tags=card.match(/<img\b[^>]*>/gi)||[];for(const tag of tags){const attrs=['src','data-src','data-original','data-lazy-src','srcset','data-srcset'];for(const attr of attrs){const match=tag.match(new RegExp('(?:^|\\s)'+attr+'=["\\']([^"\\']+)["\\']','i'));if(!match)continue;const value=decode(match[1]);const candidates=attr.includes('srcset')?value.split(',').map(x=>x.trim().split(/\\s+/)[0]):[value];for(const candidate of candidates){if(/^https:\/\//i.test(candidate)&&!/(placeholder|blank\\.|data:image)/i.test(candidate))return candidate}}}return null}
+function parsePrice(raw:string){const text=strip(raw).replace(/[’']/g,'').replace(/\u00a0/g,' ');const m=text.match(/(?:CHF|Fr\.?|SFr\.?|€|£)\s*(\d{1,5}(?:[.,]\d{1,2})?)|(\d{1,5}(?:[.,]\d{1,2})?)\s*(?:CHF|Fr\.?|SFr\.?|€|£)/i);const amount=m?.[1]||m?.[2];return amount?Number(amount.replace(',','.')):null}
+function cardPrice(card:string){const marker=card.search(/data-qa=["']item-price["']/i);if(marker>=0){const section=card.slice(marker,marker+500);const direct=parsePrice(section);if(direct!==null)return direct}const priceClass=card.search(/(?:item-price|price-style|itemPrice|basePrice)/i);if(priceClass>=0)return parsePrice(card.slice(priceClass,priceClass+500));return null}
 function extractMenu(html:string,url:string){
  const items:ReturnType<typeof transform>=[],seen=new Set<string>();
  const categoryBlocks=html.split(/<section\b[^>]*data-qa="item-category"[^>]*>/i);
@@ -41,7 +43,7 @@ function extractMenu(html:string,url:string){
   const priceText=strip(piece(part,'popular-item-style_info__','</div>'));
   const m=priceText.match(/(\d{1,5}(?:[.,]\d{2})?)\s*(?:CHF|€|£)/);
   const img=part.match(/<img\b[^>]*\bsrc="(https:[^"]+)"[^>]*>/i);
-  items.push({id:'highlight-'+items.length,name,description:'',category:'Highlights',price:m?Number(m[1].replace(',','.')):null,currency:'CHF',variations:[],sourceUrl:url,imageUrl,imageStatus:imageUrl?'available':'missing'});
+  items.push({id:'highlight-'+items.length,name,description:'',category:'Highlights',price,currency:'CHF',variations:[],sourceUrl:url,imageUrl,imageStatus:imageUrl?'available':'missing'});
  }
  // A dish can appear in both Highlights and its category. Reuse its verified image,
  // but never assign a photo from a different product.
