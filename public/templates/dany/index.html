@@ -1288,6 +1288,35 @@ html,body{max-width:100%;overflow-x:hidden}
 .dany-category-pills a:hover{background:#d6ad7d;color:#181410}
 .dany-hero-fallback{background:linear-gradient(140deg,#161513,#514030 50%,#131313)!important}
 @media(max-width:700px){.dany-dynamic-menu-section{padding:35px 16px!important}.dany-dynamic-item{flex-basis:76%!important}.dany-footer-top{flex-direction:column}.dany-footer-bottom{flex-direction:column}.dany-dynamic-group{margin:35px 0 45px!important}}
+</style><style id="atelier-dany-premium">
+:root{scroll-behavior:smooth}body{background:#10100f!important}
+.hero-section{border-radius:0!important;margin:0!important;min-height:88svh!important;height:auto!important;display:flex;flex-direction:column;justify-content:space-between;isolation:isolate}
+.hero-section::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,7,.48),transparent 38%,rgba(7,7,6,.7));z-index:0;pointer-events:none}
+.hero-section>*{z-index:1}.hero-section .hero-image-overlay{z-index:0}
+.hero-giant-title{font-weight:450!important;letter-spacing:-.065em!important;text-wrap:balance;line-height:.9!important;max-width:95%;overflow-wrap:anywhere;text-shadow:0 8px 40px #0009}
+.hero-description h2{font-weight:450!important;letter-spacing:-.045em!important}
+.nav-bar{border-bottom:1px solid #ffffff3b;padding-bottom:17px!important}
+.nav-bar .btn-outline{border-radius:50px!important;background:#f2e7d6!important;color:#171511!important;border:0!important;padding:13px 19px!important}
+#menu{background:#151513!important;color:#f5ede1!important;padding:65px 0 30px!important}
+#menu .menu-heading{padding:0 clamp(20px,5vw,75px)!important}
+#menu .menu-heading h2{font-size:clamp(40px,7vw,90px)!important;letter-spacing:-.065em!important;font-weight:400!important}
+.dany-dynamic-menu-section{padding-top:15px!important}
+.dany-dynamic-rail{overflow-x:auto!important;scrollbar-width:thin;scrollbar-color:#826f58 transparent;padding-bottom:17px!important}
+.dany-dynamic-item{overflow:hidden!important;display:flex!important;flex-direction:column!important;transition:transform .2s ease,border-color .2s ease;scroll-snap-align:start}
+.dany-dynamic-item:hover{transform:translateY(-4px);border-color:#c6a278!important}
+.dany-dynamic-item-body{display:flex!important;flex-direction:column!important;flex:1!important}
+.dany-dynamic-item-body b{margin-top:auto!important;padding-top:12px!important}
+.dany-dynamic-image-empty{background:radial-gradient(circle at 75% 30%,#66513b,#2c2925 70%)!important;color:#d2baa0!important;display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:.2em}
+.dany-dynamic-item img{width:100%;display:block;background:#38312b}
+.dany-premium-intro{background:#10100f;color:#eee3d3;padding:clamp(42px,7vw,100px) clamp(20px,7vw,100px);display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:end}
+.dany-premium-intro small{font-size:11px;letter-spacing:.2em;color:#c3a078}
+.dany-premium-intro h2{font-size:clamp(36px,6vw,84px);line-height:1.02;font-weight:400;letter-spacing:-.065em;margin:14px 0 0}
+.dany-premium-intro p{max-width:450px;color:#b8afa3;font-size:15px;line-height:1.8;margin:0}
+.dany-premium-intro a{color:#e5c19a;text-decoration:none;border-bottom:1px solid #b58b61;padding-bottom:6px;display:inline-block;margin-top:17px}
+.dany-mobile-order{display:none}
+.dany-extra-footer{border-top:1px solid #40362c}
+@media(max-width:700px){.hero-section{min-height:88svh!important;padding:20px 19px 32px!important}.hero-giant-title{font-size:clamp(45px,12vw,82px)!important;margin:95px 0 60px!important;line-height:.94!important}.hero-bottom-content{margin-top:auto!important}.nav-bar{flex-wrap:wrap}.nav-bar .btn-outline{font-size:11px!important;padding:11px 13px!important}.dany-premium-intro{grid-template-columns:1fr;gap:22px;padding:48px 22px}.dany-premium-intro p{font-size:14px}#menu{padding-top:35px!important}#menu .menu-heading h2{font-size:46px!important}.dany-mobile-order{display:flex;position:fixed;z-index:999;bottom:calc(14px + env(safe-area-inset-bottom));left:16px;right:16px;justify-content:center;align-items:center;background:#d6ad7d;color:#15110c;text-decoration:none;border-radius:40px;padding:17px;font-size:13px;font-weight:700;box-shadow:0 8px 30px #0008}.dany-extra-footer{padding-bottom:110px}}
+@media(prefers-reduced-motion:reduce){.dany-dynamic-item{transition:none!important}html{scroll-behavior:auto}}
 </style></head>
 <body>
 
@@ -1824,7 +1853,7 @@ function applyImportedRestaurant(message){
    const rail=document.createElement('div');rail.className='dany-dynamic-rail';
    for(const dish of items.filter(x=>(x.category||'Menu')===category)){
     const card=document.createElement('article');card.className='dany-dynamic-item';
-    if(typeof dish.imageUrl==='string'&&/^https:\/\//.test(dish.imageUrl)){const img=document.createElement('img');img.src=dish.imageUrl;img.loading='lazy';img.alt=dish.name;card.appendChild(img)}else{const placeholder=document.createElement('div');placeholder.className='dany-dynamic-image-empty';placeholder.textContent='PHOTO À VENIR';card.appendChild(placeholder)}
+    if(typeof dish.imageUrl==='string'&&/^https:\/\//.test(dish.imageUrl)){const img=document.createElement('img');img.src=dish.imageUrl;img.loading='lazy';img.alt=dish.name;img.onerror=()=>{const fallback=document.createElement('div');fallback.className='dany-dynamic-image-empty';fallback.textContent='PHOTO INDISPONIBLE';img.replaceWith(fallback)};card.appendChild(img)}else{const placeholder=document.createElement('div');placeholder.className='dany-dynamic-image-empty';placeholder.textContent='PHOTO À VENIR';card.appendChild(placeholder)}
     const body=document.createElement('div');body.className='dany-dynamic-item-body';
     const nameEl=document.createElement('strong');nameEl.textContent=dish.name;body.appendChild(nameEl);
     if(dish.description){const desc=document.createElement('small');desc.textContent=String(dish.description).slice(0,500);body.appendChild(desc)}
@@ -1848,6 +1877,9 @@ function applyImportedRestaurant(message){
   }
  }
  // Do not present SNACK'S DANY's address, telephone, metrics, and reviews as verified facts for another venue.
+ const oldIntro=document.querySelector('.dany-premium-intro');if(oldIntro)oldIntro.remove();
+ const intro=document.createElement('section');intro.className='dany-premium-intro';const introLeft=document.createElement('div');const introKicker=document.createElement('small');introKicker.textContent='LE RESTAURANT · LA CARTE';introLeft.appendChild(introKicker);const introTitle=document.createElement('h2');introTitle.textContent='À découvrir, à savourer.';introLeft.appendChild(introTitle);intro.appendChild(introLeft);const introRight=document.createElement('div');const introText=document.createElement('p');introText.textContent='Explorez '+items.length+' plats répartis dans '+[...new Set(items.map(x=>x.category||'Menu'))].length+' catégories. Chaque prix et chaque photo disponible provient de la carte importée.';introRight.appendChild(introText);const introLink=document.createElement('a');introLink.href='#menu';introLink.textContent='Explorer la carte ↗';introRight.appendChild(introLink);intro.appendChild(introRight);const menuSection=document.querySelector('#menu');if(menuSection)menuSection.before(intro);
+ const oldMobileOrder=document.querySelector('.dany-mobile-order');if(oldMobileOrder)oldMobileOrder.remove();if(data.sourceUrl&&/^https:\/\//.test(data.sourceUrl)){const mobileOrder=document.createElement('a');mobileOrder.className='dany-mobile-order';mobileOrder.href=data.sourceUrl;mobileOrder.target='_blank';mobileOrder.rel='noopener noreferrer';mobileOrder.textContent='Commander auprès du restaurant ↗';document.body.appendChild(mobileOrder)}
  const oldFooter=document.querySelector('.dany-extra-footer');if(oldFooter)oldFooter.remove();
  const footer=document.createElement('footer');footer.className='dany-extra-footer';
  const top=document.createElement('div');top.className='dany-footer-top';
