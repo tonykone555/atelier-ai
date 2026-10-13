@@ -1717,5 +1717,77 @@
     });
 
   </script>
+
+<style>
+/* The original SNACK'S DANY layout stays intact. Imported menu rows are data-driven. */
+.dany-dynamic-group{margin:30px 0 46px}.dany-dynamic-group h3{margin:0 0 20px;font-size:clamp(25px,3vw,42px);letter-spacing:-.04em}
+.dany-dynamic-rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:13px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.dany-dynamic-item{min-width:min(74vw,290px);max-width:290px;scroll-snap-align:start;border-radius:16px;overflow:hidden;background:#f8f6f1;color:#252421;display:flex;flex-direction:column}
+.dany-dynamic-item img,.dany-dynamic-image-empty{height:180px;width:100%;object-fit:cover;background:#e1dbd1;display:flex;align-items:center;justify-content:center;font-size:11px;color:#888}
+.dany-dynamic-item-body{padding:19px;display:flex;flex-direction:column;gap:7px;flex:1}
+.dany-dynamic-item-body strong{font-size:17px}.dany-dynamic-item-body small{font-size:12px;color:#6f6c68;line-height:1.5}.dany-dynamic-item-body b{margin-top:auto;padding-top:9px}
+.dany-dynamic-menu-section{background:#242321;color:#f5efe5;padding:50px clamp(18px,5vw,72px)}
+.dany-dynamic-menu-section .dany-dynamic-item{background:#33302b;color:#f8f2e8;border:1px solid #595148}.dany-dynamic-menu-section .dany-dynamic-item-body small{color:#c4b9a9}
+</style>
+<script>
+(function(){
+const safeText=(node,text)=>{if(node)node.textContent=String(text||'')};
+function applyImportedRestaurant(message){
+ const data=message&&typeof message==='object'?message:{};
+ const name=String(data.name||'Restaurant').slice(0,120);
+ const items=Array.isArray(data.items)?data.items.filter(x=>x&&typeof x.name==='string').slice(0,1500):[];
+ const hero=document.querySelector('.hero-giant-title');
+ if(hero){hero.textContent=name;}
+ document.title=name+' — Restaurant';
+ const logo=document.querySelector('.logo-mark');safeText(logo,name.split(/\s+/).map(x=>x.charAt(0)).slice(0,2).join('').toUpperCase());
+ const generic=document.querySelector('.hero-description h2');if(generic)safeText(generic,'Découvrez notre carte');
+ const originalMenu=document.querySelector('#menu .menu-grid');
+ if(originalMenu){
+  originalMenu.innerHTML='';
+  const categories=[...new Set(items.map(x=>String(x.category||'Menu').slice(0,100)))];
+  for(const category of categories){
+   const group=document.createElement('section');group.className='dany-dynamic-group';
+   const h=document.createElement('h3');h.textContent=category;group.appendChild(h);
+   const rail=document.createElement('div');rail.className='dany-dynamic-rail';
+   for(const dish of items.filter(x=>(x.category||'Menu')===category)){
+    const card=document.createElement('article');card.className='dany-dynamic-item';
+    if(typeof dish.imageUrl==='string'&&/^https:\/\//.test(dish.imageUrl)){const img=document.createElement('img');img.src=dish.imageUrl;img.loading='lazy';img.alt=dish.name;card.appendChild(img)}else{const placeholder=document.createElement('div');placeholder.className='dany-dynamic-image-empty';placeholder.textContent='PHOTO À VENIR';card.appendChild(placeholder)}
+    const body=document.createElement('div');body.className='dany-dynamic-item-body';
+    const nameEl=document.createElement('strong');nameEl.textContent=dish.name;body.appendChild(nameEl);
+    if(dish.description){const desc=document.createElement('small');desc.textContent=String(dish.description).slice(0,500);body.appendChild(desc)}
+    const price=document.createElement('b');price.textContent=typeof dish.price==='number'?new Intl.NumberFormat('fr-CH',{style:'currency',currency:/^(CHF|EUR|GBP)$/.test(dish.currency)?dish.currency:'CHF'}).format(dish.price):'Prix à confirmer';body.appendChild(price);
+    card.appendChild(body);rail.appendChild(card)
+   }
+   group.appendChild(rail);originalMenu.appendChild(group)
+  }
+  originalMenu.classList.add('dany-dynamic-menu-section');
+  const heading=document.querySelector('#menu .menu-heading p');safeText(heading,items.length+' plats · '+categories.length+' catégories');
+ }
+ const realPhotos=items.filter(x=>typeof x.imageUrl==='string'&&/^https:\/\//.test(x.imageUrl));
+ const heroImg=document.querySelector('#heroBgImg');if(heroImg&&realPhotos[0]){heroImg.src=realPhotos[0].imageUrl;heroImg.alt=realPhotos[0].name}
+ const foodTrack=document.querySelector('.food-track');
+ if(foodTrack&&realPhotos.length){
+  foodTrack.innerHTML='';
+  for(const dish of realPhotos.slice(0,12).concat(realPhotos.slice(0,12))){
+   const card=document.createElement('div');card.className='gallery-card';
+   const image=document.createElement('img');image.src=dish.imageUrl;image.alt=dish.name;image.loading='lazy';card.appendChild(image);
+   const caption=document.createElement('caption');caption.textContent=dish.name;card.appendChild(caption);foodTrack.appendChild(card)
+  }
+ }
+ // Do not present SNACK'S DANY's address, telephone, metrics, and reviews as verified facts for another venue.
+ const reservation=document.querySelector('#reservation');if(reservation){reservation.style.display='none';}
+ const reviews=document.querySelector('#reviews');if(reviews){reviews.style.display='none'}
+ const about=document.querySelector('#about');if(about){about.style.display='none'}
+ const catalog=document.querySelector('#catalog');if(catalog){catalog.style.display='none'}
+ const contact=document.querySelector('#contact');if(contact){contact.style.display='none'}
+ const process=document.querySelector('.process-section');if(process){process.style.display='none'}
+ const links=document.querySelectorAll('a[href^="tel:"],a[href^="mailto:"]');links.forEach(a=>a.style.display='none');
+ document.querySelectorAll('.nav-links a').forEach(a=>{if(a.getAttribute('href')==='#catalog'){a.setAttribute('href','#menu');a.textContent='Menu'}else if(a.getAttribute('href')!=='#home'){a.style.display='none'}});
+ const action=document.querySelector('.nav-bar .btn-outline');if(action){if(data.sourceUrl&&/^https:\/\//.test(data.sourceUrl)){action.href=data.sourceUrl;action.textContent='Commander ↗';action.target='_blank';action.rel='noopener noreferrer'}else action.style.display='none'}
+}
+window.addEventListener('message',event=>{if(event.source!==window.parent)return;if(event.data?.type==='ATELIER_RESTAURANT_DATA')applyImportedRestaurant(event.data.payload)});
+window.parent?.postMessage({type:'ATELIER_TEMPLATE_READY'},'*');
+})();
+</script>
 </body>
 </html>
