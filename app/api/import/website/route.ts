@@ -5,7 +5,8 @@ import {isIP} from 'node:net';
 export const runtime='nodejs';
 export const maxDuration=60;
 
-type Page={name:string;path:string;url:string;status:'verified'|'unavailable';title?:string};
+type ElementRef={id:string;kind:'logo'|'image'|'video'|'heading'|'paragraph'|'menu'|'form';role:string;hint:string;excerpt?:string};
+type Page={name:string;path:string;url:string;status:'verified'|'unavailable';title?:string;elements?:ElementRef[]};
 const MAX_PAGES=30;
 const MAX_HTML=1200000;
 const FETCH_TIMEOUT=8500;
@@ -60,6 +61,40 @@ function discover(html:string,base:URL,origin:URL){
  }
  return found;
 }
+function inspectElements(html:string,path:string):ElementRef[]{
+ const refs:ElementRef[]=[];
+ const push=(kind:ElementRef['kind'],role:string,hint:string,excerpt='')=>{
+  if(refs.length>=100)return;
+  refs.push({id:path+'::'+kind+'-'+refs.filter(x=>x.kind===kind).length,kind,role,hint:hint.slice(0,180),...(excerpt?{excerpt:excerpt.slice(0,180)}:{})});
+ };
+ // Only describe the original assets. Do not include/copy the original media bytes or media URLs.
+ for(const tag of html.match(/<(?:img|video|source|form|h[1-6]|p)\b[^>]*>/gi)||[]){
+  const name=tag.match(/^<([\w-]+)/i)?.[1]?.toLowerCase()||'';
+  const cls=tag.match(/\bclass\s*=\s*(?:"([^"]*)"|'([^']*)')/i)?.[1]||'';
+  const id=tag.match(/\bid\s*=\s*(?:"([^"]*)"|'([^']*)')/i)?.[1]||'';
+  const alt=tag.match(/\balt\s*=\s*(?:"([^"]*)"|'([^']*)')/i)?.[1]||'';
+  const aria=tag.match(/\baria-label\s*=\s*(?:"([^"]*)"|'([^']*)')/i)?.[1]||'';
+  const hint=[name,id&&'#'+id,cls&&'.'+cls.trim().replace(/\s+/g,'.')].filter(Boolean).join('');
+  if(name==='img'){
+   const logo=/logo|brand|identity/i.test([cls,id,alt].join(' '));
+   push(logo?'logo':'image',logo?'brand-logo':/hero|banner|background/i.test(hint)?'hero-image':'content-image',hint,alt);
+  }else if(name==='video'||name==='source'){
+   if(name==='source'&&!/video\//i.test(tag))continue;
+   push('video',/hero|banner|background/i.test(hint)?'hero-video':'content-video',hint,aria);
+  }else if(name==='form'){
+   push('form',/book|reserve|reservation/i.test(hint)?'reservation-form':'contact-or-order-form',hint,aria);
+  }else if(/^h[1-6]$/.test(name)){
+   push('heading',name==='h1'?'page-title':'section-title',hint);
+  }else if(name==='p'){
+   push('paragraph','body-copy',hint);
+  }
+ }
+ const menuHints=html.match(/(?:class|id)=["'][^"']*(?:menu|carte|products|dish|food)[^"']*["']/gi)||[];
+ if(menuHints.length)push('menu','menu-or-product-region','menu-related classes/ids ('+menuHints.length+' matches)');
+ const ogLogo=html.match(/<link[^>]*rel=["'][^"']*(?:icon|apple-touch-icon)[^"']*["'][^>]*>/i);
+ if(ogLogo)push('logo','favicon','head link[rel*=icon]');
+ return refs;
+}
 async function readPage(origin:URL,path:string){
  const target=new URL(path,origin);
  const response=await fetch(target,{redirect:'error',cache:'no-store',signal:AbortSignal.timeout(FETCH_TIMEOUT),headers:{'Accept':'text/html','User-Agent':'AtelierWebsiteImporter/1.0'}});
@@ -106,7 +141,7 @@ export async function POST(request:Request){
     const page:Page={path:entry.path,name:entry.label,url:new URL(entry.path,origin).href,status:'unavailable'};
     try{
      const result=await readPage(origin,entry.path);
-     page.status='verified';page.title=result.title;
+     page.status='verified';page.title=result.title;page.elements=inspectElements(result.html,entry.path);
      if(result.title&&(entry.label==='Home'||entry.label.length>60))page.name=result.title.slice(0,55);
      return {page,links:discover(result.html,new URL(entry.path,origin),origin)};
     }catch{return {page,links:[] as {path:string;label:string}[]}}
@@ -128,7 +163,7 @@ export async function POST(request:Request){
   }
   if(!pages.some(p=>p.status==='verified'))return NextResponse.json({error:'No accessible HTML pages found. This website may block automated requests or require JavaScript rendering.'},{status:422});
   const label=pages[0].title||origin.hostname.replace(/^www\./,'');
-  return NextResponse.json({name:label,sourceWebsite:origin.origin,mode:'original-reference',pages,verified:pages.filter(p=>p.status==='verified').length,total:pages.length,partial:queue.length>MAX_PAGES,note:'Discovers up to 30 same-origin public HTML pages. Source pages remain external references and may block iframe embedding. This does not copy HTML/CSS or make the source editable.'});
+  return NextResponse.json({name:label,sourceWebsite:origin.origin,mode:'element-blueprint',pages,elementCount:pages.reduce((n,p)=>n+(p.elements?.length||0),0),verified:pages.filter(p=>p.status==='verified').length,total:pages.length,partial:queue.length>MAX_PAGES,note:'Discovers up to 30 same-origin public HTML pages. Source pages remain external references and may block iframe embedding. HTML element markers are collected for replacement planning, but original media assets are not copied and the source DOM is not editable.'});
  }catch(error){
   return NextResponse.json({error:error instanceof Error?error.message:'Unable to inspect website.'},{status:400});
  }
