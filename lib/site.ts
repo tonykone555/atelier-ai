@@ -1,7 +1,7 @@
 export type SiteKind = 'business'|'store';
-export type TemplateKey = 'atelier'|'noir'|'bloom'|'estate'|'kinetic'|'artisan'|'trattoria'|'sora'|'ember'|'dany'|'dany-grid';
+export type TemplateKey = 'atelier'|'noir'|'bloom'|'estate'|'kinetic'|'artisan'|'trattoria'|'sora'|'ember'|'dany'|'dany-grid'|'imported-site';
 export type Section = {id:string;type:'hero'|'features'|'about'|'products'|'contact'|'testimonials';heading:string;body:string;image?:string;videoUrl?:string;items?:string[]};
-export type Site = {id:string;name:string;kind:SiteKind;template:TemplateKey;tagline:string;accent:string;pages:{slug:string;name:string;sections:Section[]}[];research?:{title:string;url:string;summary:string}[];importedMenu?:{id:string;name:string;description:string;category:string;price:number|null;currency:string;imageUrl:string|null;sourceUrl?:string;imageStatus?:'available'|'missing';variations?:{name:string;price:number|null}[]}[]};
+export type Site = {id:string;name:string;kind:SiteKind;template:TemplateKey;tagline:string;accent:string;pages:{slug:string;name:string;sections:Section[]}[];research?:{title:string;url:string;summary:string}[];sourceWebsite?:string;importedPages?:{name:string;path:string;url:string;status?:string}[];importedMenu?:{id:string;name:string;description:string;category:string;price:number|null;currency:string;imageUrl:string|null;sourceUrl?:string;imageStatus?:'available'|'missing';variations?:{name:string;price:number|null}[]}[]};
 export const templates:{id:TemplateKey;label:string;category:string;description:string;accent:string;image:string}[]=[
 {id:'atelier',label:'Atelier',category:'Architecture',description:'Editorial whitespace, generous typography',accent:'#c0a57d',image:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80'},
 {id:'noir',label:'Maison Noir',category:'Luxury commerce',description:'Black-on-cream, premium product storytelling',accent:'#b89568',image:'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80'},
@@ -12,6 +12,7 @@ export const templates:{id:TemplateKey;label:string;category:string;description:
 {id:'trattoria',label:'Trattoria Luce',category:'Restaurant · Italian',description:'Cream and terracotta, cinematic food cards',accent:'#ba6748',image:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200&q=80'},
 {id:'sora',label:'Sora',category:'Restaurant · Fine dining',description:'Dark immersive menu, spacious serif headlines',accent:'#c8a874',image:'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1200&q=80'},
 {id:'dany',label:'Dany Dark',category:'Restaurant · Signature',description:'Cinematic dark homepage, featured photo slider and long dish carousels',accent:'#c5a17a',image:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80'},
+{id:'imported-site',label:'Original Website',category:'Imported multi-page website',description:'Preview the existing original website and browse every imported page',accent:'#b7a794',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80'},
 {id:'dany-grid',label:'Dany Grid',category:'Restaurant',description:'Immersive dark hero and grid menu',accent:'#d7b18a',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80'},
 {id:'ember',label:'Ember Social',category:'Restaurant · Contemporary',description:'Energetic typography and bold editorial visuals',accent:'#e5653b',image:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80'}
 ];
