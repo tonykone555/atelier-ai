@@ -101,13 +101,59 @@ export async function GET(request:Request){
   const data=await apify('datasets/'+run.defaultDatasetId+'/items?clean=true&limit=1000',token);
   if(!data.ok)return NextResponse.json({error:'Could not read the menu results.'},{status:502});
   const raw=await data.json();if(!Array.isArray(raw))return NextResponse.json({error:'Invalid menu data.'},{status:422});
-  const first=raw.find((r:Record<string,unknown>)=>typeof r.html==='string') as Record<string,unknown>|undefined;
-  if(!first||first.blocked===true||first.ok===false)return NextResponse.json({error:'Scraper did not return accessible rendered HTML. Check the Apify run diagnostics.'},{status:422});
-  const html=String(first.html||'');
-  const items=extractMenu(html,menuUrl);
-  if(!items.length)return NextResponse.json({error:'No dish cards could be parsed from the scraped HTML. HTML length: '+html.length+'; item-name markers: '+(html.match(/data-qa="item-name"/g)||[]).length+'. Please inspect the Actor result.'},{status:422});
-  const truncated=first.htmlTruncated===true||Number(first.htmlChars||0)>html.length;
-  const restaurantName=strip(piece(html,'data-qa="heading">','</h1>'))||clean(first.title,120).split(' Delivery')[0];
-  return NextResponse.json({status:'SUCCEEDED',source:'EasyApi Just Eat menu scraper',restaurantName,sourceUrl:menuUrl,items,imagesFound:items.filter(i=>i.imageUrl).length,imagesMissing:items.filter(i=>!i.imageUrl).length,groups:[...new Set(items.map(i=>i.category))],partial:truncated,renderedHtmlChars:html.length,totalHtmlChars:Number(first.htmlChars||html.length),requiresReview:true,publishable:false,note:truncated?'Partial import: Apify truncated the HTML. Some categories and dishes are missing; verify before publication.':'Review prices, availability and image rights before publication.'});
+
+  // Actors vary in their dataset output. Prefer actual menu records when present;
+  // otherwise parse any successful HTML page, not just the first result.
+  const objects=raw.filter((r:unknown):r is Record<string,unknown>=>r!==null&&typeof r==='object'&&!Array.isArray(r));
+  const isDish=(r:Record<string,unknown>)=>typeof r.name==='string'&&r.name.trim().length>1&&
+    (r.price!==undefined||r.basePrice!==undefined||r.variations!==undefined||r.menuGroupName!==undefined||r.category!==undefined);
+  const rows:Record<string,unknown>[]=[];
+  for(const item of objects){
+   if(isDish(item))rows.push(item);
+   for(const key of ['items','menuItems','products','dishes']){
+    const nested=item[key];if(Array.isArray(nested))for(const v of nested){
+     if(v&&typeof v==='object'&&!Array.isArray(v)&&isDish(v as Record<string,unknown>))rows.push(v as Record<string,unknown>);
+    }
+   }
+  }
+  const byIdentity=new Map<string,ReturnType<typeof transform>[number]>();
+  const add=(items:ReturnType<typeof transform>)=>{for(const item of items){
+   const key=(item.category+'|'+item.name).trim().toLowerCase();
+   const current=byIdentity.get(key);
+   if(!current)byIdentity.set(key,item);
+   else byIdentity.set(key,{...current,price:current.price??item.price,imageUrl:current.imageUrl||item.imageUrl,
+     imageStatus:current.imageUrl||item.imageUrl?'available':'missing',description:current.description||item.description});
+  }};
+  if(rows.length)add(transform(rows,menuUrl));
+  let html='',first:Record<string,unknown>|undefined;
+  for(const row of objects){
+   const candidate=typeof row.html==='string'?row.html:typeof row.content==='string'&&row.content.trimStart().startsWith('<')?row.content:'';
+   if(!candidate||row.blocked===true||row.ok===false)continue;
+   const extracted=extractMenu(candidate,menuUrl);
+   if(extracted.length){
+    add(extracted);
+    if(candidate.length>html.length){html=candidate;first=row}
+   }
+  }
+  const items=[...byIdentity.values()];
+  if(!items.length){
+   const blocked=objects.some(r=>r.blocked===true||r.ok===false||[401,403,429,503].includes(Number(r.statusCode||r.status||0)));
+   const lengths=objects.map(r=>typeof r.html==='string'?r.html.length:0);
+   const errors=objects.map(r=>clean(r.error||r.message||r.statusText,160)).filter(Boolean).slice(0,2);
+   return NextResponse.json({
+    error:blocked?'Just Eat blocked or challenged the scraper. No verified menu was returned. Try again later or supply a menu file.':
+     'The scraper completed, but returned no recognizable menu data. The restaurant page may use a different layout or require browser rendering.',
+    diagnostic:{runId,records:raw.length,htmlLengths:lengths.slice(0,4),structuredRows:rows.length,actorErrors:errors},
+    status:'NO_MENU'
+   },{status:422});
+  }
+  const truncated=first?.htmlTruncated===true||Number(first?.htmlChars||0)>html.length;
+  const restaurantName=html?strip(piece(html,'data-qa="heading">','</h1>'))||clean(first?.title,120).split(' Delivery')[0]:'';
+  return NextResponse.json({status:'SUCCEEDED',source:rows.length?'structured-or-html-menu':'rendered-html-menu',restaurantName,sourceUrl:menuUrl,items,
+   imagesFound:items.filter(i=>i.imageUrl).length,imagesMissing:items.filter(i=>!i.imageUrl).length,
+   groups:[...new Set(items.map(i=>i.category))],partial:truncated,renderedHtmlChars:html.length,
+   totalHtmlChars:Number(first?.htmlChars||html.length),requiresReview:true,publishable:false,
+   note:truncated?'Partial HTML import. Verify the full menu against the restaurant.':'Verify all imported dishes, photos, prices and reuse rights before publishing.'});
+
  }catch{return NextResponse.json({error:'Could not complete the menu import.'},{status:500})}
 }
