@@ -207,3 +207,5 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 
 /* Edge-to-edge restaurant preview on narrow screens; editor controls stay intact */
 @media(max-width:700px){.preview-wrap:has(.dany-original-frame){padding:0!important;overflow:visible}.preview:has(.dany-original-frame),.preview.mobile:has(.dany-original-frame){width:100%!important;max-width:100%!important;min-width:0!important;flex-shrink:1!important;box-shadow:none!important;border-radius:0!important}.dany-original-frame{width:100%!important;height:calc(100dvh - 165px)!important;min-height:650px!important}}
+
+.refresh-photos-button{border:1px solid #b79b77;background:#f7f0e7;color:#51402f;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:700;cursor:pointer;max-width:100%}.refresh-photos-button:disabled{opacity:.55;cursor:wait}
