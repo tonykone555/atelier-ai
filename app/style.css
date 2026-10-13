@@ -194,3 +194,7 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .dany-order-band p{color:#bdb4a7;font-size:13px;line-height:1.6;margin:0;max-width:450px}
 .dany-order-band>a{background:#c5a17a;color:#17130e;padding:16px 24px;border-radius:35px;font-size:12px;font-weight:700;white-space:nowrap}
 @media(max-width:680px){.dany-dark-menu{padding:45px 18px 65px}.dany-featured-card{flex-basis:84%;height:300px}.dany-dish{flex-basis:72%}.dany-category-head{align-items:flex-start;flex-direction:column;gap:8px}.dany-category-head>span{text-align:left}.dany-order-band{align-items:stretch;flex-direction:column}.dany-order-band>a{text-align:center}.dany-featured-rail,.dany-category-rail{gap:12px}}
+
+/* Original HTML runs within a scrollable frame, preserving its own CSS, JS and breakpoints. */
+.dany-original-frame{display:block;width:100%;height:min(82vh,1000px);min-height:630px;border:0;background:#272727}
+.preview.mobile .dany-original-frame{height:78vh;min-height:560px}
