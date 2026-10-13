@@ -40,9 +40,9 @@ export async function POST(request:Request){
         {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},signal:controller.signal,
         body:JSON.stringify({mode:'menuUrl',startUrls:[menuUrl],country:new URL(menuUrl).hostname.endsWith('.ch')?'ch':undefined,maxItems:250})});
     }finally{clearTimeout(timeout)}
-    if(!response.ok)return NextResponse.json({error:'Apify menu import failed',status:response.status},{status:502});
+    if(!response.ok){const detail=(await response.text()).slice(0,1800);let msg='Apify rejected the menu import';try{const parsed=JSON.parse(detail);msg=String(parsed.error?.message||parsed.message||msg).slice(0,350)}catch{}console.error('Apify Just Eat import failed',JSON.stringify({status:response.status,host:new URL(menuUrl).hostname,detail:msg}));return NextResponse.json({error:(new URL(menuUrl).hostname.endsWith('.ch')?'The configured Apify menu scraper may not support Swiss Just Eat menus. ':'')+msg,status:response.status},{status:502})}
     const rows=await response.json();
-    if(!Array.isArray(rows))return NextResponse.json({error:'Unexpected scraper output'},{status:502});
+    if(!Array.isArray(rows))return NextResponse.json({error:'The Apify Actor returned an unexpected response. It may have timed out or failed to finish scraping.'},{status:502});if(rows.length===0)return NextResponse.json({error:'The scraper returned no dishes. This Actor is documented for UK Just Eat menus and may not support this country; use a Switzerland-compatible scraper.'},{status:422});
     const items:Item[]=rows.slice(0,250).map((r:Record<string,unknown>,index:number)=>{
       const variations=Array.isArray(r.variations)?r.variations.slice(0,30).map((v:Record<string,unknown>)=>({name:clean(v.Name??v.name,80),price:number(v.BasePrice??v.price)})):[];
       return {id:clean(r.id,100)||String(index+1),name:clean(r.name,160),description:clean(r.description,800),
