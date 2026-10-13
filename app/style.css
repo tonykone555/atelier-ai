@@ -204,3 +204,6 @@ input:focus,textarea:focus{border-color:#8a87f2;box-shadow:0 0 0 3px #8b8afa1a}
 .dany-zip-upload small{font-size:10px;line-height:1.5;color:#89817a}
 
 .quick-template-picker{display:flex;align-items:center;gap:7px;padding:5px 8px;border:1px solid #d7cfc3;border-radius:10px;background:#fff;flex-shrink:0}.quick-template-picker label{font-size:11px;font-weight:700;color:#63594d}.quick-template-picker select{background:#f5efe6;color:#2c2620;border:0;border-radius:7px;padding:9px;font-size:12px;max-width:180px;cursor:pointer}@media(max-width:700px){.quick-template-picker{width:100%;justify-content:space-between;order:-1}.quick-template-picker select{max-width:70%;flex:1}.toolbar{flex-wrap:wrap}.toolbar-actions{flex-wrap:wrap}}
+
+/* Edge-to-edge restaurant preview on narrow screens; editor controls stay intact */
+@media(max-width:700px){.preview-wrap:has(.dany-original-frame){padding:0!important;overflow:visible}.preview:has(.dany-original-frame),.preview.mobile:has(.dany-original-frame){width:100%!important;max-width:100%!important;min-width:0!important;flex-shrink:1!important;box-shadow:none!important;border-radius:0!important}.dany-original-frame{width:100%!important;height:calc(100dvh - 165px)!important;min-height:650px!important}}
