@@ -1,7 +1,7 @@
 export type SiteKind = 'business'|'store';
 export type TemplateKey = 'atelier'|'noir'|'bloom'|'estate'|'kinetic'|'artisan'|'trattoria'|'sora'|'ember'|'dany'|'dany-grid';
 export type Section = {id:string;type:'hero'|'features'|'about'|'products'|'contact'|'testimonials';heading:string;body:string;image?:string;videoUrl?:string;items?:string[]};
-export type Site = {id:string;name:string;kind:SiteKind;template:TemplateKey;tagline:string;accent:string;pages:{slug:string;name:string;sections:Section[]}[];research?:{title:string;url:string;summary:string}[]};
+export type Site = {id:string;name:string;kind:SiteKind;template:TemplateKey;tagline:string;accent:string;pages:{slug:string;name:string;sections:Section[]}[];research?:{title:string;url:string;summary:string}[];importedMenu?:{id:string;name:string;description:string;category:string;price:number|null;currency:string;imageUrl:string|null;sourceUrl?:string;imageStatus?:'available'|'missing';variations?:{name:string;price:number|null}[]}[]};
 export const templates:{id:TemplateKey;label:string;category:string;description:string;accent:string;image:string}[]=[
 {id:'atelier',label:'Atelier',category:'Architecture',description:'Editorial whitespace, generous typography',accent:'#c0a57d',image:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80'},
 {id:'noir',label:'Maison Noir',category:'Luxury commerce',description:'Black-on-cream, premium product storytelling',accent:'#b89568',image:'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80'},
