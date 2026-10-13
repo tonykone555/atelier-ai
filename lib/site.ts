@@ -1,5 +1,5 @@
 export type SiteKind = 'business'|'store';
-export type TemplateKey = 'atelier'|'noir'|'bloom'|'estate'|'kinetic'|'artisan'|'trattoria'|'sora'|'ember';
+export type TemplateKey = 'atelier'|'noir'|'bloom'|'estate'|'kinetic'|'artisan'|'trattoria'|'sora'|'ember'|'dany';
 export type Section = {id:string;type:'hero'|'features'|'about'|'products'|'contact'|'testimonials';heading:string;body:string;image?:string;videoUrl?:string;items?:string[]};
 export type Site = {id:string;name:string;kind:SiteKind;template:TemplateKey;tagline:string;accent:string;pages:{slug:string;name:string;sections:Section[]}[];research?:{title:string;url:string;summary:string}[]};
 export const templates:{id:TemplateKey;label:string;category:string;description:string;accent:string;image:string}[]=[
@@ -11,6 +11,7 @@ export const templates:{id:TemplateKey;label:string;category:string;description:
 {id:'artisan',label:'Slow Studio',category:'Restaurants & artisans',description:'Warm artisanal details and restrained type',accent:'#b18d67',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80'},
 {id:'trattoria',label:'Trattoria Luce',category:'Restaurant · Italian',description:'Cream and terracotta, cinematic food cards',accent:'#ba6748',image:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200&q=80'},
 {id:'sora',label:'Sora',category:'Restaurant · Fine dining',description:'Dark immersive menu, spacious serif headlines',accent:'#c8a874',image:'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1200&q=80'},
+{id:'dany',label:'Dany Dark',category:'Restaurant · Signature',description:'Cinematic dark homepage, featured photo slider and long dish carousels',accent:'#c5a17a',image:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80'},
 {id:'ember',label:'Ember Social',category:'Restaurant · Contemporary',description:'Energetic typography and bold editorial visuals',accent:'#e5653b',image:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80'}
 ];
 export function demoSite(name:string,niche:string,kind:SiteKind,template:TemplateKey):Site {
