@@ -41,8 +41,8 @@ function extractMenu(html:string,url:string){
   const name=strip(piece(part,'popular-item-style_name__','</span>').split('>').slice(1).join('>'));
   if(!name||items.some(x=>x.name===name))continue;
   const priceText=strip(piece(part,'popular-item-style_info__','</div>'));
-  const m=priceText.match(/(\d{1,5}(?:[.,]\d{2})?)\s*(?:CHF|€|£)/);
-  const img=part.match(/<img\b[^>]*\bsrc="(https:[^"]+)"[^>]*>/i);
+  const price=parsePrice(priceText)??cardPrice(part);
+  const imageUrl=cardPhoto(part);
   items.push({id:'highlight-'+items.length,name,description:'',category:'Highlights',price,currency:'CHF',variations:[],sourceUrl:url,imageUrl,imageStatus:imageUrl?'available':'missing'});
  }
  // A dish can appear in both Highlights and its category. Reuse its verified image,
