@@ -1317,6 +1317,31 @@ html,body{max-width:100%;overflow-x:hidden}
 .dany-extra-footer{border-top:1px solid #40362c}
 @media(max-width:700px){.hero-section{min-height:88svh!important;padding:20px 19px 32px!important}.hero-giant-title{font-size:clamp(45px,12vw,82px)!important;margin:95px 0 60px!important;line-height:.94!important}.hero-bottom-content{margin-top:auto!important}.nav-bar{flex-wrap:wrap}.nav-bar .btn-outline{font-size:11px!important;padding:11px 13px!important}.dany-premium-intro{grid-template-columns:1fr;gap:22px;padding:48px 22px}.dany-premium-intro p{font-size:14px}#menu{padding-top:35px!important}#menu .menu-heading h2{font-size:46px!important}.dany-mobile-order{display:flex;position:fixed;z-index:999;bottom:calc(14px + env(safe-area-inset-bottom));left:16px;right:16px;justify-content:center;align-items:center;background:#d6ad7d;color:#15110c;text-decoration:none;border-radius:40px;padding:17px;font-size:13px;font-weight:700;box-shadow:0 8px 30px #0008}.dany-extra-footer{padding-bottom:110px}}
 @media(prefers-reduced-motion:reduce){.dany-dynamic-item{transition:none!important}html{scroll-behavior:auto}}
+</style><style id="atelier-dany-mobile-overflow-repair">
+html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+.hero-section{isolation:isolate!important}
+.hero-section .hero-bg{z-index:0!important;opacity:.72!important}
+.hero-section .hero-image-overlay{z-index:0!important}
+.hero-section .hero-title-panel,.hero-section .hero-bottom-content,.hero-section .nav-bar{position:relative;z-index:2!important}
+.hero-giant-title{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:100%!important;max-width:100%!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important}
+#menu,#menu .menu-grid,.dany-dynamic-menu-section,.dany-dynamic-group{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.dany-dynamic-rail{display:flex!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory}
+.dany-dynamic-item{box-sizing:border-box!important;min-width:0!important;max-width:100%!important;scroll-snap-align:start}
+.dany-dynamic-item-body{min-width:0!important;max-width:100%!important;overflow-wrap:anywhere!important}
+.dany-dynamic-item-body strong,.dany-dynamic-item-body small{display:block!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.dany-category-pills{max-width:100%!important;overflow-x:auto!important}
+@media(max-width:700px){
+.hero-section{min-height:78svh!important;overflow:hidden!important}
+.hero-title-panel{width:100%!important;min-width:0!important}
+.hero-giant-title{font-size:clamp(30px,9vw,62px)!important;letter-spacing:-.06em!important;line-height:1.03!important;margin:65px 0 60px!important;text-wrap:balance!important}
+.dany-dynamic-menu-section{padding:24px 16px!important}
+.dany-dynamic-rail{gap:12px!important}
+.dany-dynamic-item{flex:0 0 min(76%,285px)!important;width:min(76%,285px)!important}
+.dany-dynamic-item img,.dany-dynamic-image-empty{height:185px!important;width:100%!important}
+.dany-dynamic-item-body{padding:15px!important}
+.dany-dynamic-group h3{font-size:clamp(24px,7vw,37px)!important}
+.food-gallery-slide{max-width:75vw!important}
+}
 </style></head>
 <body>
 
@@ -1834,7 +1859,7 @@ function applyImportedRestaurant(message){
  const name=String(data.name||'Restaurant').slice(0,120);
  const items=Array.isArray(data.items)?data.items.filter(x=>x&&typeof x.name==='string').slice(0,1500):[];
  const hero=document.querySelector('.hero-giant-title');
- if(hero){hero.textContent=name;}
+ if(hero){hero.textContent=name;hero.style.fontSize=name.length>13?'clamp(28px,8vw,62px)':'';}
  document.title=name+' — Restaurant';
  const logo=document.querySelector('.logo-mark');safeText(logo,name.split(/\s+/).map(x=>x.charAt(0)).slice(0,2).join('').toUpperCase());
  const generic=document.querySelector('.hero-description h2');if(generic)safeText(generic,'Découvrez notre carte');
